@@ -20,8 +20,6 @@
 // Bibliotecas
 
 // Constantes
-
-
 //float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
 //int relayPin=13;    //RelayFan
 int Flash = 4;        //ReleyFocoFlash
