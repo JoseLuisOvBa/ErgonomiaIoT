@@ -6,11 +6,11 @@
  * 
  * Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
  * ritmo cardiaco (HR) y oxigenación (SpO2) por MQTT.
- *            
- * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      Pir Hcsr501 
- * I012 ------ 1 Datos        GND ------ 1 GND            I04 ------1 Datos    
- * GND ------- 3 GND          I014 ------2 Datos          VCC -------2 Vin  
- * VCC ------- 4 Vin          VCC -------3 Vin            GND ------ 3 GND                                                               
+ *            GAS                        PRESENCIA                    
+ * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      FLASH     ESP32      FLASH
+ * I012 ------ 1 Datos        GND ------ 1 GND            I04 ------1 Datos    I013 ------1 Datos    
+ * GND ------- 3 GND          I014 ------2 Datos          VCC -------2 Vin     VCC -------2 Vin  
+ * VCC ------- 4 Vin          VCC -------3 Vin            GND ------ 3 GND     GND ------ 3 GND                                                          
  * 
  * Esto es una muestra de la estructura básica de un programa
  */
@@ -71,9 +71,11 @@ void loop(){     //VOID LOOP****************************************************
 void presencia(){                //Esta funcion realiza el sensado de presencia
   ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
 if (ValorPIR == HIGH){           //Pregunta si esta en alta
+     Serial.println(" | PRESENCIA | ");
    digitalWrite(Flash, 1);       //de ser asi lo enciede (fisicamente parapadea ya que el dispositivo se calibra para que este un tiempo apagado y otro tiempo encendido)
    } else{                       // si esta en bajo
       digitalWrite(Flash, 0);    //Pemanece apagado
+      Serial.println(" | AUSENCIA | ");
       }
   } 
 
@@ -86,13 +88,15 @@ if (ValorPIR == HIGH){           //Pregunta si esta en alta
   sensorValue = analogRead(MQ135pin); // lectura de la entrada analogica "A0""
   Serial.print("Valor detectado por el sensor: ");
   Serial.print(sensorValue);
-  if(sensorValue > 100)
-  {
-   Serial.print(" | Se ha detectado gas!");
-   digitalWrite (relayPin, HIGH);
-   delay(2000);
-  }
-  Serial.println("");
-  digitalWrite (relayPin, LOW);
-  delay(2000);
+  if(sensorValue > 310)
+    {
+     Serial.print(" | Se ha detectado gas!");
+     digitalWrite (relayPin, HIGH);
+     delay(2000);
+    }
+  else{
+    Serial.println("");
+    digitalWrite (relayPin, LOW);
+    delay(2000);
+    }
   } 
