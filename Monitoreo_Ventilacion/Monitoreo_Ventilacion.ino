@@ -15,20 +15,27 @@
  * Esto es una muestra de la estructura básica de un programa
  */
 
-// Bibliotecas
+// Bibliotecas************************************************************************
+#include <WiFi.h>  // Biblioteca para el control de WiFi
+#include <PubSubClient.h> //Biblioteca para conexion MQTT
 
-// Constantes
+
+// Constantes*************************************************************************
 float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
 int relayPin=13;    //RelayFan
 int Flash = 4;        //ReleyFocoFlash
 int ValorPIR=0;
 
+// Variables**************************************************************************
+long timeNow, timeLast; // Variables de control de tiempo no bloqueante
+int data = 0; // Contador
+int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQTT
 
-// Definición de objetos
+// Definición de objetos**************************************************************
   #define MQ135pin 12     //#define CO2PIN 12
   #define PIR 14
 
-// Condiciones iniciales - Se ejecuta sólo una vez al energizar
+// Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 void setup() {
 
      pinMode(PIR, INPUT);
@@ -39,13 +46,22 @@ void setup() {
      Serial.println("El sensor de gas se esta pre-calentando");
      delay(5000); // Espera a que el sensor se caliente durante 20 segundos
 
-}// Fin de void setup
+     timeLast = millis (); // Inicia el control de tiempo     
+
+}// Fin de void setup*****************************************************************
 
 
-void loop(){                 //VOID LOOP
-presencia();                          //funcion de presencia
-gases();                              //Funcion deteccion de CO2
-}                            // Fin de void loop
+void loop(){     //VOID LOOP**********************************************************
+
+    timeNow = millis(); // Control de tiempo para esperas no bloqueantes
+      if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
+      timeLast = timeNow; // Actualización de seguimiento de tiempo
+
+      presencia();                          //funcion de presencia  
+      gases();                              //Funcion deteccion de CO2
+    }// fin del if (timeNow - timeLast > wait)
+
+}// Fin de void loop*****************************************************************
 
 
 
