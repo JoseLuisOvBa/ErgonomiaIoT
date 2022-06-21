@@ -32,7 +32,7 @@ int data = 0; // Contador
 int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQTT
 
 // Definición de objetos**************************************************************
-  #define MQ135pin 12     //#define CO2PIN 12
+  #define CO2PIN 12
   #define PIR 14
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
@@ -51,7 +51,7 @@ void setup() {
 }// Fin de void setup*****************************************************************
 
 
-void loop(){     //VOID LOOP**********************************************************
+void loop(){     //VOID LOOP**********************************************************///////////////////
 
     timeNow = millis(); // Control de tiempo para esperas no bloqueantes
       if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
@@ -61,7 +61,7 @@ void loop(){     //VOID LOOP****************************************************
       gases();                              //Funcion deteccion de CO2
     }// fin del if (timeNow - timeLast > wait)
 
-}// Fin de void loop*****************************************************************
+}// Fin de void loop*****************************************************************///////////////////
 
 
 
@@ -71,11 +71,11 @@ void loop(){     //VOID LOOP****************************************************
 void presencia(){                //Esta funcion realiza el sensado de presencia
   ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
 if (ValorPIR == HIGH){           //Pregunta si esta en alta
-     Serial.println(" | PRESENCIA | ");
-   digitalWrite(Flash, 1);       //de ser asi lo enciede (fisicamente parapadea ya que el dispositivo se calibra para que este un tiempo apagado y otro tiempo encendido)
+     Serial.print(" | PRESENCIA | ");
+   digitalWrite(Flash, 1);       //de ser asi lo enciede
    } else{                       // si esta en bajo
       digitalWrite(Flash, 0);    //Pemanece apagado
-      Serial.println(" | AUSENCIA | ");
+      Serial.print(" | AUSENCIA | ");
       }
   } 
 
@@ -85,18 +85,19 @@ if (ValorPIR == HIGH){           //Pregunta si esta en alta
 //----------------------- GASES ---------------------------
 
   void gases(){                //Esta funcion realiza el sensado de presencia
-  sensorValue = analogRead(MQ135pin); // lectura de la entrada analogica "A0""
+  sensorValue = analogRead(CO2PIN); // lectura de la entrada analogica "A0""
   Serial.print("Valor detectado por el sensor: ");
   Serial.print(sensorValue);
-  if(sensorValue > 310)
+  if(sensorValue > 600)   // La OMS sugiere de 400 a 600
     {
-     Serial.print(" | Se ha detectado gas!");
+     Serial.print("  ¡Se ha detectado gas!  ");
      digitalWrite (relayPin, HIGH);
      delay(2000);
     }
   else{
-    Serial.println("");
+    Serial.print("");
     digitalWrite (relayPin, LOW);
     delay(2000);
     }
+  Serial.println("");
   } 
