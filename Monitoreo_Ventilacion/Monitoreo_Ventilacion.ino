@@ -7,11 +7,13 @@
  * Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
  * ritmo cardiaco (HR) y oxigenación (SpO2) por MQTT.
  *            GAS                        PRESENCIA                    
- * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      FLASH     ESP32      FLASH
- * I012 ------ 1 Datos        GND ------ 1 GND            I04 ------1 Datos    I013 ------1 Datos    
- * GND ------- 3 GND          I014 ------2 Datos          VCC -------2 Vin     VCC -------2 Vin  
- * VCC ------- 4 Vin          VCC -------3 Vin            GND ------ 3 GND     GND ------ 3 GND                                                          
+ * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      LedInter  ESP32      Rele ventilador
+ * I012 ------ 1 Datos        GND ------ 1 GND            I033 -----1 Datos    I013 ------1 Datos    
+ * GND ------- 3 GND          I014 ------2 Datos                               VCC -------2 Vin  
+ * VCC ------- 4 Vin          VCC -------3 Vin                                 GND ------ 3 GND                                                          
  * 
+ *IO
+ *
  * Esto es una muestra de la estructura básica de un programa
  */
 
@@ -23,7 +25,7 @@
 // Constantes*************************************************************************
 float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
 int relayPin=13;    //RelayFan
-int Flash = 4;        //ReleyFocoFlash
+int Flash = 33;        //RelayFocoFlash
 int ValorPIR=0;
 
 // Variables**************************************************************************
@@ -44,7 +46,9 @@ void setup() {
      
      Serial.begin (115200);
      Serial.println("El sensor de gas se esta pre-calentando");
+     digitalWrite(Flash, 1); 
      delay(5000); // Espera a que el sensor se caliente durante 20 segundos
+     digitalWrite(Flash, 0); 
 
      timeLast = millis (); // Inicia el control de tiempo     
 
