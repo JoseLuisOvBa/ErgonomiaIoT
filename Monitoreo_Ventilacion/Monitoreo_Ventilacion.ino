@@ -1,8 +1,8 @@
 
 /*Monitoreo de CO2, Presencia y ventilación
  * Envio de datos de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
- * por: Jose Luis Oviedo Barriga
- * Fecha: 15 de junio de 2022
+ * por: Jose Luis Oviedo Barriga, David Garcia Sarmiento
+ * Fecha: 24 de junio de 2022
  * 
  * Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
  * ritmo cardiaco (HR) y oxigenación (SpO2) por MQTT.
@@ -25,7 +25,7 @@
 // Constantes*************************************************************************
 float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
 int relayPin=13;    //RelayFan
-int Flash = 33;        //RelayFocoFlash
+int LedIn = 33;        //LedInterno
 int ValorPIR=0;
 
 // Variables**************************************************************************
@@ -41,14 +41,14 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 void setup() {
 
      pinMode(PIR, INPUT);
-     pinMode(Flash, OUTPUT);
+     pinMode(LedIn , OUTPUT);
      pinMode (relayPin, OUTPUT);
      
      Serial.begin (115200);
      Serial.println("El sensor de gas se esta pre-calentando");
-     digitalWrite(Flash, 1); 
+     digitalWrite(LedIn, 0); 
      delay(5000); // Espera a que el sensor se caliente durante 20 segundos
-     digitalWrite(Flash, 0); 
+     digitalWrite(LedIn, 1); 
 
      timeLast = millis (); // Inicia el control de tiempo     
 
@@ -76,9 +76,9 @@ void presencia(){                //Esta funcion realiza el sensado de presencia
   ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
 if (ValorPIR == HIGH){           //Pregunta si esta en alta
      Serial.print(" | PRESENCIA | ");
-   digitalWrite(Flash, 1);       //de ser asi lo enciede
+   digitalWrite(LedIn, 0);       //de ser asi lo enciede(0=encendido) logica inversa
    } else{                       // si esta en bajo
-      digitalWrite(Flash, 0);    //Pemanece apagado
+      digitalWrite(LedIn, 1);    //Pemanece apagado (1=apagado) logica inversa
       Serial.print(" | AUSENCIA | ");
       }
   } 
