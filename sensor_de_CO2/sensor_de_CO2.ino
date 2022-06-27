@@ -12,10 +12,10 @@ PubSubClient client(espClient);   // Este objeto maneja los datos de conexion al
 
 // Constantes 
 const int LED3 = 14;                          // Conexión WiFi
-const char* ssid = "Totalplay-ADA6";          // Nombre de la red WiFi
-const char* password = "Tp0107018052";        // Contraseña de la red Wifi
-const char* mqtt_server = "192.168.100.60";   // Red local (ifconfig en terminal) -> broker MQTT
-IPAddress server(192,168,100,60);             // Red local (ifconfig en terminal) -> broker MQTT
+const char* ssid = "HUAWEI Y8s";          // Nombre de la red WiFi Cel de David
+const char* password = "40cff5815000";        // Contraseña de la red Wifi Cel de David
+const char* mqtt_server = "192.168.43.201";   // Red local (ifconfig en terminal) -> broker MQTT Con Cel de David
+IPAddress server(192,168,43,201);             // Red local (ifconfig en terminal) -> broker MQTT Con Cel de David
 
 // Variables
 float sensorValue; //variable para guardar el valor analógico del sensor
