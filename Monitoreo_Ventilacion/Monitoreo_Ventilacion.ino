@@ -9,8 +9,8 @@
  *            GAS                        PRESENCIA                    
  * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      FLASH     ESP32      FLASH
  * I012 ------ 1 Datos        GND ------ 1 GND            I04 ------1 Datos    I013 ------1 Datos    
- * GND ------- 3 GND          I014 ------2 Datos          VCC -------2 Vin     VCC -------2 Vin  
- * VCC ------- 4 Vin          VCC -------3 Vin            GND ------ 3 GND     GND ------ 3 GND                                                          
+ * GND ------- 3 GND          I014 ------2 Datos                               VCC -------2 Vin  
+ * VCC ------- 4 Vin          VCC -------3 Vin                                 GND ------ 3 GND                                                          
  * 
  * Esto es una muestra de la estructura básica de un programa
  */
@@ -23,7 +23,7 @@
 // Constantes*************************************************************************
 float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
 int relayPin=13;    //RelayFan
-int Flash = 4;        //ReleyFocoFlash
+int LedInt = 33;        //ReleyFocoFlash
 int ValorPIR=0;
 
 // Variables**************************************************************************
@@ -39,7 +39,7 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 void setup() {
 
      pinMode(PIR, INPUT);
-     pinMode(Flash, OUTPUT);
+     pinMode(LedInt, OUTPUT);
      pinMode (relayPin, OUTPUT);
      
      Serial.begin (115200);
@@ -72,9 +72,9 @@ void presencia(){                //Esta funcion realiza el sensado de presencia
   ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
 if (ValorPIR == HIGH){           //Pregunta si esta en alta
      Serial.print(" | PRESENCIA | ");
-   digitalWrite(Flash, 1);       //de ser asi lo enciede
+   digitalWrite(LedInt, 0);       //de ser asi lo enciede
    } else{                       // si esta en bajo
-      digitalWrite(Flash, 0);    //Pemanece apagado
+      digitalWrite(LedInt, 1);    //Pemanece apagado
       Serial.print(" | AUSENCIA | ");
       }
   } 
