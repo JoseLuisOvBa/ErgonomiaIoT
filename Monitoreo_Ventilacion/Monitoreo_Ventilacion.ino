@@ -7,13 +7,20 @@
  * Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
  * ritmo cardiaco (HR) y oxigenación (SpO2) por MQTT.
  *            CO2                        PRESENCIA                    
- * ESP32      MQ135           ESP32      Pir Hcsr501   ESP32      Ventilador
- * I012 ------ 1 Datos        GND ------ 1 GND         I013 ------1 Datos    
- * GND ------- 3 GND          I014 ------2 Datos        
- * VCC ------- 4 Vin          VCC -------3 Vin                                                                  
- * 
+ * ESP32      MQ135PinAtras      ESP32      Pir Hcsr501   ESP32      Ventilador
+ * I012 ------    1 Datos        GND ------ 1 GND         I013 ------1 Datos    
+ * GND -------    3 GND          I016 ------2 Datos        
+ * VCC -------    4 Vin          VCC -------3 Vin                                                                  
+ *        
  * Asignacion de pines ESP32CAM
- * 
+ * IO4    sV2       Sensor de ventana compeltamente cerrada
+ * IO2    sV1       Sensor de ventana compltamente abierta
+ * IO14   Abrir     En 1 Abrir ventana
+ * IO15   Cerrar    En 1 Cerrar ventana
+ * IO13   Venti     Rele Ventilador  
+ * IO12   CO2       Sensor CO2
+ * IO16   PIR       Sensor Presencia
+ * IO33   LedIn     LEDinterno (Acuse de Presencia)
  * 
  */
 
@@ -35,7 +42,7 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 
 // Definición de objetos**************************************************************
   #define CO2 12
-  #define PIR 14
+  #define PIR 16
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 void setup() {
