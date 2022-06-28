@@ -1,18 +1,20 @@
 
 /*Monitoreo de CO2, Presencia y ventilación
  * Envio de datos de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
- * por: Jose Luis Oviedo Barriga
- * Fecha: 15 de junio de 2022
+ * por: Jose Luis Oviedo Barriga, David Garcia Sarmiento
+ * Fecha: 28 de junio de 2022
  * 
  * Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
  * ritmo cardiaco (HR) y oxigenación (SpO2) por MQTT.
- *            GAS                        PRESENCIA                    
- * ESP32      MQ135           ESP32      Pir Hcsr501      ESP32      FLASH     ESP32      FLASH
- * I012 ------ 1 Datos        GND ------ 1 GND            I04 ------1 Datos    I013 ------1 Datos    
- * GND ------- 3 GND          I014 ------2 Datos                               VCC -------2 Vin  
- * VCC ------- 4 Vin          VCC -------3 Vin                                 GND ------ 3 GND                                                          
+ *            CO2                        PRESENCIA                    
+ * ESP32      MQ135           ESP32      Pir Hcsr501   ESP32      Ventilador
+ * I012 ------ 1 Datos        GND ------ 1 GND         I013 ------1 Datos    
+ * GND ------- 3 GND          I014 ------2 Datos        
+ * VCC ------- 4 Vin          VCC -------3 Vin                                                                  
  * 
- * Esto es una muestra de la estructura básica de un programa
+ * Asignacion de pines ESP32CAM
+ * 
+ * 
  */
 
 // Bibliotecas************************************************************************
@@ -21,9 +23,9 @@
 
 
 // Constantes*************************************************************************
-float sensorValue; //CO2Value; variable para guardar el valor analógico del sensor
-int relayPin=13;    //RelayFan
-int LedInt = 33;        //ReleyFocoFlash
+float ValorCO2; // variable para guardar el valor analógico del sensor
+int Venti=13;    //RelayFan
+int LedInt = 33;        //LED interno
 int ValorPIR=0;
 
 // Variables**************************************************************************
@@ -32,7 +34,7 @@ int data = 0; // Contador
 int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQTT
 
 // Definición de objetos**************************************************************
-  #define CO2PIN 12
+  #define CO2 12
   #define PIR 14
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
@@ -40,7 +42,7 @@ void setup() {
 
      pinMode(PIR, INPUT);
      pinMode(LedInt, OUTPUT);
-     pinMode (relayPin, OUTPUT);
+     pinMode (Venti, OUTPUT);
      
      Serial.begin (115200);
      Serial.println("El sensor de gas se esta pre-calentando");
@@ -58,7 +60,7 @@ void loop(){     //VOID LOOP****************************************************
       timeLast = timeNow; // Actualización de seguimiento de tiempo
 
       presencia();                          //funcion de presencia  
-      gases();                              //Funcion deteccion de CO2
+      COdos();                              //Funcion deteccion de CO2
     }// fin del if (timeNow - timeLast > wait)
 
 }// Fin de void loop*****************************************************************///////////////////
@@ -81,22 +83,21 @@ if (ValorPIR == HIGH){           //Pregunta si esta en alta
 
 
 
+//----------------------- CO2---------------------------
 
-//----------------------- GASES ---------------------------
-
-  void gases(){                //Esta funcion realiza el sensado de presencia
-  sensorValue = analogRead(CO2PIN); // lectura de la entrada analogica "A0""
+  void COdos(){                //Esta funcion realiza el sensado de presencia
+  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica "A0""
   Serial.print("Valor detectado por el sensor: ");
-  Serial.print(sensorValue);
-  if(sensorValue > 600)   // La OMS sugiere de 400 a 600
+  Serial.print(ValorCO2);
+  if(ValorCO2 > 600)   // La OMS sugiere de 400 a 600
     {
-     Serial.print("  ¡Se ha detectado gas!  ");
-     digitalWrite (relayPin, HIGH);
+     Serial.print("  ¡Se ha detectado CO2!  ");
+     digitalWrite (Venti, HIGH);
      delay(2000);
     }
   else{
     Serial.print("");
-    digitalWrite (relayPin, LOW);
+    digitalWrite (Venti, LOW);
     delay(2000);
     }
   Serial.println("");
