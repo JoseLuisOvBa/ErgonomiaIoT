@@ -13,10 +13,10 @@
  * VCC -------    4 Vin          VCC -------3 Vin                                                                  
  *        
  * Asignacion de pines ESP32CAM
- * IO4    sV2       Sensor de ventana compeltamente cerrada
- * IO2    sV1       Sensor de ventana compltamente abierta
- * IO14   Abrir     En 1 Abrir ventana
- * IO15   Cerrar    En 1 Cerrar ventana
+ * IO4    Abrir     En 1 Abrir ventana
+ * IO2    Cerrar    En 1 Cerrar ventana
+ * IO14   sV2       Sensor de ventana compeltamente cerrada
+ * IO15   sV1       Sensor de ventana compltamente abierta
  * IO13   Venti     Rele Ventilador  
  * IO12   CO2       Sensor CO2
  * IO16   PIR       Sensor Presencia
