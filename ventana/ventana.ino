@@ -80,30 +80,30 @@ void loop(){     //VOID LOOP****************************************************
 //----------------------- CO2---------------------------
 
   void COdos(){                //Esta funcion realiza el sensado de presencia
-  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica "A0""
-  Serial.print("Valor detectado por el sensor: ");
-  Serial.print(ValorCO2);
+               ValorCO2 = analogRead(CO2); // lectura de la entrada analogica "A0""
+               Serial.print("Valor detectado por el sensor: ");
+               Serial.print(ValorCO2);
   
-  if(ValorCO2 > 600)   // La OMS sugiere de 400 a 600
-    {
-     Serial.print("  ¡Se ha detectado CO2!  ");
-     digitalWrite (Venti,HIGH);  //Enciende Ventilador
-     if(EdoVen==0)Open();                     //Abre Ventana
-     delay(1000);
-    }
-  else{
-    Serial.print("");
-    digitalWrite (Venti, LOW);
-    if(EdoVen==1)Close();                     //Cierra Ventana
-    delay(1000);
-    }
-  Serial.println("");
-  } 
+                    if(ValorCO2 > 600)   // La OMS sugiere de 400 a 600
+                       {
+                       Serial.print("  ¡Se ha detectado CO2!  ");
+                        digitalWrite (Venti,HIGH);  //Enciende Ventilador
+                           if(EdoVen==0)Open();                     //Abre Ventana
+                        delay(1000);
+                      }
+                     else{
+                       Serial.print("");
+                       digitalWrite (Venti, LOW);
+                           if(EdoVen==1)Close();                     //Cierra Ventana
+                       delay(1000);
+                     }
+                     
+               Serial.println("");
+              } 
 
 
 //------------------------- Abrir Ventana  -----------------------------
   void Open(){                            //Esta funcion abre la ventana
-              EdoVen=1;
               digitalWrite(Abrir,HIGH);
               digitalWrite(Cerrar,LOW);
               delay(8000);
@@ -113,14 +113,14 @@ void loop(){     //VOID LOOP****************************************************
                     digitalWrite(Cerrar,LOW);
                     ValorSv=digitalRead(Sv);
                    }while(ValorSv);
-                  
+                   
+              EdoVen=1;    
               digitalWrite(Abrir,LOW);
               digitalWrite(Cerrar,LOW);              
              }
 
 //--------------------------- Cerrar Ventana  -------------------------------
   void Close(){                            //Esta funcion cierra la ventana
-               EdoVen=0;
                digitalWrite(Abrir,LOW);
                digitalWrite(Cerrar,HIGH);
                delay(5000);
@@ -131,6 +131,8 @@ void loop(){     //VOID LOOP****************************************************
                     ValorSv=digitalRead(Sv);
                   if(!ValorSv){delay(3000);}    //Tiempo para que termine de cerrar la ventana (el sensor esta antes del cierre total)
                   }while(ValorSv);
+                  
+              EdoVen=0;    
               digitalWrite(Abrir,LOW);
               digitalWrite(Cerrar,LOW);  
              }
