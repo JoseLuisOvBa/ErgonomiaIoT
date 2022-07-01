@@ -134,32 +134,27 @@ void COdos() {               //Esta funcion realiza el sensado de presencia
 void Open() {                           //Esta funcion abre la ventana
   digitalWrite(Abrir, HIGH);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º ABRIENDO1(0>1) Sv= ");
-      ValorSv = digitalRead(Sv);
-  Serial.println(ValorSv);
+  Serial.print(" º ABRIENDO º");
   delay(9000);
 
   do {
     digitalWrite(Abrir, HIGH);
     digitalWrite(Cerrar, LOW);
-    Serial.print(" º ABRIENDO(1) Sv= ");
+    Serial.println(" º ABRIENDO º");
     ValorSv = digitalRead(Sv);
-    Serial.println(ValorSv);
   } while (ValorSv);
 
   EdoVen = 1;
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º DESACTIVADO(0) Sv= ");
-    ValorSv = digitalRead(Sv); //////////
-      Serial.println(ValorSv);   ////////////
+  Serial.print(" º DESACTIVADO º");
 }
 
 //--------------------------- Cerrar Ventana  -------------------------------
 void Close() {                           //Esta funcion cierra la ventana
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, HIGH);
-  Serial.print(" º CERRANDO1(0>1) Sv= ");
+  Serial.print(" º CERRANDO º");
        ValorSv = digitalRead(Sv);
        Serial.println(ValorSv);
   delay(5000);
@@ -167,20 +162,17 @@ void Close() {                           //Esta funcion cierra la ventana
   do {
     digitalWrite(Abrir, LOW);
     digitalWrite(Cerrar, HIGH);
-    Serial.print(" º CERRANDO2(1) Sensor= ");
+    Serial.println(" º CERRANDO º");
     ValorSv = digitalRead(Sv);
-      Serial.println(ValorSv);
     if (!ValorSv) {
       Serial.print("En espera");
-      Serial.println(ValorSv);
-      delay(7500); //Tiempo para que termine de cerrar la ventana (el sensor esta antes del cierre total)
+      delay(6500); //Tiempo para que termine de cerrar la ventana (el sensor esta antes del cierre total)
     }
   } while (ValorSv);
 
   EdoVen = 0;
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º DESACTIVADO(0)º");
-    ValorSv = digitalRead(Sv); //////////
-      Serial.println(ValorSv);   ////////////
+  Serial.print(" º DESACTIVADO º");
+
 }
