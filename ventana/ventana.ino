@@ -20,11 +20,12 @@
  * 
  */
 
+ 
 // Constantes*************************************************************************
 float ValorCO2;     // variable para guardar el valor analógico del sensor
 int ValorSv=0;       // variable para guardar el valor digital del sensor de completamente abierto
 int EdoVen=0;       //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
-int Venti=15;
+
 // Variables**************************************************************************
 long timeNow, timeLast; // Variables de control de tiempo no bloqueante
 int data = 0; // Contador
