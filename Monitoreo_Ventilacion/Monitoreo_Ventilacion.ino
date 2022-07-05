@@ -19,7 +19,7 @@
    IO15   Venti     Rele Ventilador
    IO12   CO2       Sensor CO2
    IO13   PIR       Sensor Presencia
-   IO33   LedIn     LEDinterno (Acuse de Presencia)
+   IO33   LedInt     LEDinterno (Acuse de Presencia)
 
 */
 
@@ -29,8 +29,8 @@
 
 //Datos de WiFi**********************************************************************
 
-const char* ssid = "OviRab";                  // Nombre de la red WiFi
-const char* password = "99121976";            // Contraseña de la red Wifi
+const char* ssid = "HUAWEI Y8s";                  // Nombre de la red WiFi
+const char* password = "40cff5815000";            // Contraseña de la red Wifi
 const char* mqtt_server = "192.168.1.103";   // Red local (ifconfig en terminal) -> broker MQTT
 IPAddress server(192,168,1,103);              // Red local (ifconfig en terminal) -> broker MQTT
 
@@ -76,6 +76,7 @@ void setup() {
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
   digitalWrite(Venti, LOW);
+  digitalWrite(LedInt, LOW);
 
 
 
@@ -139,6 +140,7 @@ void loop() {    //VOID LOOP****************************************************
   ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
 
         char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
+        
         dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
         Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
@@ -178,6 +180,7 @@ void loop() {    //VOID LOOP****************************************************
     digitalWrite(Venti, HIGH); //Enciende Ventilador
     if (EdoVen == 0) {
       Open(); //Abre Ventana
+      EdoVen==1;
     }
     delay(1000);
   }
@@ -186,13 +189,18 @@ void loop() {    //VOID LOOP****************************************************
     digitalWrite (Venti, LOW);
     if (EdoVen == 1) {
       Close(); //Cierra Ventana
+      EdoVen==0;
     }
     delay(1000);
   }
 
   Serial.println("");
 
-
+        delay (100);
+        dtostrf(EdoVen, 1, 2, dataString);
+        Serial.print("Ventana(1-Open/0-Close): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.println(dataString);
+        client.publish("sic/capston16/EdoVen", dataString);
 
   
   
@@ -282,11 +290,11 @@ void callback(char* topic, byte* message, unsigned int length) {
     if (String(topic) == "sic/capston16/presencia") {  // En caso de recibirse mensaje en el tema esp32/output
       if(messageTemp == "true"){
         Serial.println("Led encendido");
-        digitalWrite(LedInt, LOW);
+        digitalWrite(LedInt, LOW); //enciende led interno
       }// fin del if (String(topic) == "sic/capston16/presencia"")
       else if(messageTemp == "false"){
         Serial.println("Led apagado");
-        digitalWrite(LedInt, HIGH);
+        digitalWrite(LedInt, HIGH); //apaga led interno
         }// fin del else if(messageTemp == "false")
     }// fin del if (String(topic) == "sic/capston16/presencia")
 }// fin del void callback*************************************************************
