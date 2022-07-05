@@ -1,0 +1,959 @@
+[
+    {
+        "id": "088c302329e3cdac",
+        "type": "tab",
+        "label": "PROYECTO CAPSTON",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "463ccdbcab2b34d2",
+        "type": "function",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "func": "msg.payload = msg.payload.id;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 80,
+        "wires": [
+            [
+                "d3d8920297c125af"
+            ]
+        ]
+    },
+    {
+        "id": "5908ee3c4d6845f6",
+        "type": "function",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "func": "msg.payload = msg.payload.CO2;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 140,
+        "wires": [
+            [
+                "ce43f71df6bce62c"
+            ]
+        ]
+    },
+    {
+        "id": "fa9a83048f573ac8",
+        "type": "function",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "func": "msg.topic = msg.payload.id;\nmsg.payload = msg.payload.CO2;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 220,
+        "wires": [
+            [
+                "a00e3eb96b21acda"
+            ]
+        ]
+    },
+    {
+        "id": "fb8df90622a78f23",
+        "type": "mqtt in",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "topic": "sic/capston16/CO2",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "234e647723ae4728",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "7e450dd803e29f56"
+            ]
+        ]
+    },
+    {
+        "id": "d3d8920297c125af",
+        "type": "ui_text",
+        "z": "088c302329e3cdac",
+        "group": "71697663edcd7898",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Salon 1",
+        "format": "",
+        "layout": "row-left",
+        "x": 680,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "ce43f71df6bce62c",
+        "type": "ui_gauge",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "group": "ac14757c0bcf6c4b",
+        "order": 1,
+        "width": "6",
+        "height": "6",
+        "gtype": "gage",
+        "title": "CO2",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 670,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a00e3eb96b21acda",
+        "type": "ui_chart",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "group": "c94147aee56c8222",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "label": "Historico de CO2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1000",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 690,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "447e6b9438c3e757",
+        "type": "json",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 380,
+        "wires": [
+            [
+                "ef5c78aa1d5249a1"
+            ]
+        ]
+    },
+    {
+        "id": "5b643fcd6f702cb5",
+        "type": "mqtt in",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "topic": "sic/capston16/presencia",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "edd3004a.11da88",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 380,
+        "wires": [
+            [
+                "447e6b9438c3e757"
+            ]
+        ]
+    },
+    {
+        "id": "ef5c78aa1d5249a1",
+        "type": "function",
+        "z": "088c302329e3cdac",
+        "name": "A/P",
+        "func": "//msg.topic = msg.payload.id2;\nmsg.payload = msg.payload.AusenciaPresencia;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "0b1cf8fd34abea5a",
+                "184b73485e67dfa6"
+            ]
+        ]
+    },
+    {
+        "id": "992d1bf00b2dcc00",
+        "type": "ui_audio",
+        "z": "088c302329e3cdac",
+        "name": "Alarma",
+        "group": "28c5fafaf4c6c6a4",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1100,
+        "y": 640,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "0b1cf8fd34abea5a",
+        "type": "ui_gauge",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "group": "34983b35c8346961",
+        "order": 2,
+        "width": "6",
+        "height": "6",
+        "gtype": "gage",
+        "title": "AusenciaPresencia",
+        "label": "binario",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 770,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7e450dd803e29f56",
+        "type": "json",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "463ccdbcab2b34d2",
+                "5908ee3c4d6845f6",
+                "fa9a83048f573ac8"
+            ]
+        ]
+    },
+    {
+        "id": "2f121c54e83cad04",
+        "type": "inject",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Topic de fecha",
+        "payloadType": "date",
+        "x": 420,
+        "y": 40,
+        "wires": [
+            [
+                "fd3764c7d82fe98e"
+            ]
+        ]
+    },
+    {
+        "id": "0221396ec19e0a60",
+        "type": "debug",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "fd3764c7d82fe98e",
+        "type": "function",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "func": "// Lo que está después de “//” son comentarios\n// Crea un objeto Date a partir del payload enviado por timestamp\nvar date = new Date(msg.payload);\n// Cambia el payload para que sea una fecha con formato\nmsg.payload = date.toString();\n//msg.taquitos = \"2 de pastor\";\n// Regresa el mensaje para que se envíe al sigueinte nodo\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 40,
+        "wires": [
+            [
+                "0221396ec19e0a60",
+                "fb127c205d5ec60f"
+            ]
+        ]
+    },
+    {
+        "id": "fb127c205d5ec60f",
+        "type": "ui_text",
+        "z": "088c302329e3cdac",
+        "group": "71697663edcd7898",
+        "order": 0,
+        "width": "5",
+        "height": "2",
+        "name": "",
+        "label": "Fecha",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 970,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "aca479488d7148f3",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 580,
+        "wires": [
+            [
+                "ed44290eb614c0c0",
+                "39c424d6c9d3c015",
+                "aed163cba071f317"
+            ]
+        ]
+    },
+    {
+        "id": "ecc7f77d51cac37f",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 640,
+        "wires": [
+            [
+                "ed44290eb614c0c0"
+            ]
+        ]
+    },
+    {
+        "id": "aed163cba071f317",
+        "type": "debug",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ed44290eb614c0c0",
+        "type": "ui_switch",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "label": "Monitor Switch - Label",
+        "tooltip": "",
+        "group": "e6d23854.a005",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 920,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "39c424d6c9d3c015",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Intruso en el aula",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 900,
+        "y": 640,
+        "wires": [
+            [
+                "992d1bf00b2dcc00"
+            ]
+        ]
+    },
+    {
+        "id": "184b73485e67dfa6",
+        "type": "switch",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 490,
+        "y": 600,
+        "wires": [
+            [
+                "aca479488d7148f3"
+            ],
+            [
+                "ecc7f77d51cac37f"
+            ]
+        ]
+    },
+    {
+        "id": "f64fdc7622781223",
+        "type": "mqtt in",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "topic": "sic/capston16/ventana",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "d541ccd968a8659f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 780,
+        "wires": [
+            [
+                "c9cbeba1e633ccd4"
+            ]
+        ]
+    },
+    {
+        "id": "c9cbeba1e633ccd4",
+        "type": "join",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "mode": "auto",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": "false",
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "x": 350,
+        "y": 780,
+        "wires": [
+            [
+                "a165cd295ef9e6a9"
+            ]
+        ]
+    },
+    {
+        "id": "ed6bb164a5b0d341",
+        "type": "debug",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "a165cd295ef9e6a9",
+        "type": "switch",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 490,
+        "y": 780,
+        "wires": [
+            [
+                "7a95cc39fb3d98c7"
+            ],
+            [
+                "81ba3bf7f23418bd"
+            ]
+        ]
+    },
+    {
+        "id": "7a95cc39fb3d98c7",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 660,
+        "y": 760,
+        "wires": [
+            [
+                "e9ed53dbc9200b71",
+                "ed6bb164a5b0d341",
+                "0041e9f92ce017d5"
+            ]
+        ]
+    },
+    {
+        "id": "81ba3bf7f23418bd",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 660,
+        "y": 820,
+        "wires": [
+            [
+                "0041e9f92ce017d5",
+                "6efc454912f24975"
+            ]
+        ]
+    },
+    {
+        "id": "e9ed53dbc9200b71",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Abierto",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 760,
+        "wires": [
+            [
+                "5edd036b2e87eed6"
+            ]
+        ]
+    },
+    {
+        "id": "5edd036b2e87eed6",
+        "type": "ui_text",
+        "z": "088c302329e3cdac",
+        "group": "66cbfbdfc0fcbbb9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Ventana",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1140,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "0041e9f92ce017d5",
+        "type": "ui_switch",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "label": "Indicador ventana",
+        "tooltip": "",
+        "group": "66cbfbdfc0fcbbb9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 950,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6efc454912f24975",
+        "type": "change",
+        "z": "088c302329e3cdac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Cerrado",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 860,
+        "wires": [
+            [
+                "b76fb33663791dc5"
+            ]
+        ]
+    },
+    {
+        "id": "b76fb33663791dc5",
+        "type": "ui_text",
+        "z": "088c302329e3cdac",
+        "group": "66cbfbdfc0fcbbb9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Ventana ",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1140,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "234e647723ae4728",
+        "type": "mqtt-broker",
+        "name": "Red celular",
+        "broker": "192.168.43.44",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "71697663edcd7898",
+        "type": "ui_group",
+        "name": "Ubicacion",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ac14757c0bcf6c4b",
+        "type": "ui_group",
+        "name": "Valor de CO2",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c94147aee56c8222",
+        "type": "ui_group",
+        "name": "Grafica",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "edd3004a.11da88",
+        "type": "mqtt-broker",
+        "name": "Red celular",
+        "broker": "192.168.43.44",
+        "port": "1883",
+        "clientid": "Capston16",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "28c5fafaf4c6c6a4",
+        "type": "ui_group",
+        "name": "Alarma",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "34983b35c8346961",
+        "type": "ui_group",
+        "name": "Valor de presencia",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 7,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e6d23854.a005",
+        "type": "ui_group",
+        "name": "Alarma",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d541ccd968a8659f",
+        "type": "mqtt-broker",
+        "name": "Red celular",
+        "broker": "192.168.43.44",
+        "port": "1883",
+        "clientid": "Capston161",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "66cbfbdfc0fcbbb9",
+        "type": "ui_group",
+        "name": "Estado ventana",
+        "tab": "1bc7baa8f6b02be4",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "1bc7baa8f6b02be4",
+        "type": "ui_tab",
+        "name": "Capston16",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
