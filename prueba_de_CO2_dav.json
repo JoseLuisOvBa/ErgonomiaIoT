@@ -1,0 +1,153 @@
+[
+    {
+        "id": "6427d925f8844c46",
+        "type": "tab",
+        "label": "Ventilacion_CO2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "161245064e34803c",
+        "type": "mqtt in",
+        "z": "6427d925f8844c46",
+        "name": "",
+        "topic": "codigoIoT/SIC/venCO2",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "c3958ca4ffc0dd36",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "c0f787d6bd643594",
+                "b6ca92ca195992a5"
+            ]
+        ]
+    },
+    {
+        "id": "7e1278771e95380a",
+        "type": "function",
+        "z": "6427d925f8844c46",
+        "name": "",
+        "func": "//msg.payload = parseInt (msg.payload);\n//global.set (\"sCO2\", msg.payload);\nmsg.payload = msg.payload.CO2;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "429cd2cede5bdabe"
+            ]
+        ]
+    },
+    {
+        "id": "c0f787d6bd643594",
+        "type": "json",
+        "z": "6427d925f8844c46",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 480,
+        "y": 120,
+        "wires": [
+            [
+                "7e1278771e95380a"
+            ]
+        ]
+    },
+    {
+        "id": "429cd2cede5bdabe",
+        "type": "ui_gauge",
+        "z": "6427d925f8844c46",
+        "name": "",
+        "group": "dd70abe0.14cb38",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "CO2",
+        "label": "PPM",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "550",
+        "x": 830,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "b6ca92ca195992a5",
+        "type": "debug",
+        "z": "6427d925f8844c46",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "c3958ca4ffc0dd36",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.43.44",
+        "port": "1883",
+        "clientid": "laboratoriomctr",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "dd70abe0.14cb38",
+        "type": "ui_group",
+        "name": "CO2 - Etiqueta",
+        "tab": "6d54a11.6b2c0e",
+        "order": 5,
+        "disp": true,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "6d54a11.6b2c0e",
+        "type": "ui_tab",
+        "name": "Cantidad_CO2",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
