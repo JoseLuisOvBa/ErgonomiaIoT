@@ -30,9 +30,9 @@
 //Datos de WiFi**********************************************************************
 
 const char* ssid = "HUAWEI Y8s";                  // Nombre de la red WiFi
-const char* password = "40cff5815000";            // Contraseña de la red Wifi
-const char* mqtt_server = "192.168.43.174";   // Red local (ifconfig en terminal) -> broker MQTT
-IPAddress server(192,168,43,174);              // Red local (ifconfig en terminal) -> broker MQTT
+const char* password = "40cff5815000";          // Contraseña de la red Wifi
+const char* mqtt_server = "192.168.43.44";   // Red local (ifconfig en terminal) -> broker MQTT
+IPAddress server(192,168,43,44);              // Red local (ifconfig en terminal) -> broker MQTT
 
 // Objetos***************************************************************************
 
