@@ -163,15 +163,17 @@ void loop() {    //VOID LOOP****************************************************
 //----------------------- CO2---------------------------
 
   ValorCO2 = analogRead(CO2); // lectura de la entrada analogica
+
+  Serial.print("Valor detectado por el sensor SinConv: ");   //prueba
+  Serial.print(ValorCO2);  //prueba
   
         delay (100);
         dtostrf(ValorCO2, 1, 2, dataString);
-        Serial.print("PPM de CO2: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.print("PPM de CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/CO2", dataString);
         
-//  Serial.print("Valor detectado por el sensor: ");
-//  Serial.print(ValorCO2);
+
   
 
   if (ValorCO2 > 600)  // La OMS sugiere de 400 a 600
