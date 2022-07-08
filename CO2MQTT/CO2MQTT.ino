@@ -28,11 +28,17 @@
 #include <PubSubClient.h> //Biblioteca para conexion MQTT
 
 //Datos de WiFi**********************************************************************
-
+/*
 const char* ssid = "HUAWEI Y8s";                  // Nombre de la red WiFi
 const char* password = "40cff5815000";          // Contraseña de la red Wifi
 const char* mqtt_server = "192.168.43.44";   // Red local (ifconfig en terminal) -> broker MQTT
 IPAddress server(192,168,43,44);              // Red local (ifconfig en terminal) -> broker MQTT
+*/
+const char* ssid = "OviRab";                  // Nombre de la red WiFi
+const char* password = "99121976";            // Contraseña de la red Wifi
+const char* mqtt_server = "192.168.1.104";   // Red local (ifconfig en terminal) -> broker MQTT
+IPAddress server(192,168,1,104);              // Red local (ifconfig en terminal) -> broker MQTT
+
 
 // Objetos***************************************************************************
 
@@ -65,7 +71,7 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 
 void setup() {
   Serial.begin (115200);
-  
+
   pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
   pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
   pinMode(Venti, OUTPUT);     //Salida de encendido de ventiladaro
@@ -73,28 +79,30 @@ void setup() {
   pinMode(Sv, INPUT);         //Entrada del sensor ventana abierta
   pinMode(PIR, INPUT);         //Entrada del sensor de presencia
 
+  
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
   digitalWrite(Venti, LOW);
   digitalWrite(LedInt, LOW);
 
-
+///
 
     Serial.println();
     Serial.println();
     Serial.print("Conectar a ");
     Serial.println(ssid);
  
-    WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
- 
-    while (WiFi.status() != WL_CONNECTED) { // Este bucle espera a que se realice la conexión
+ //  WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
+  
+
+ /*  while (WiFi.status() != WL_CONNECTED) { // Este bucle espera a que se realice la conexión
       digitalWrite (LedInt, HIGH);
       delay(500); //dado que es de suma importancia esperar a la conexión, debe usarse espera bloqueante
       digitalWrite (LedInt, LOW);
       Serial.print(".");  // Indicador de progreso
       delay (5);
     }
-  
+   
     // Cuando se haya logrado la conexión, el programa avanzará, por lo tanto, puede informarse lo siguiente
     Serial.println();
     Serial.println("WiFi conectado");
@@ -118,56 +126,33 @@ void setup() {
 
 
   timeLast = millis (); // Inicia el control de tiempo
-
+*/
 }// Fin de void setup*****************************************************************
 
 
 void loop() {    //VOID LOOP**********************************************************///////////////////
+  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica
 
-      //Verificar siempre que haya conexión al broker
-   if (!client.connected()) {
-        reconnect();  // En caso de que no haya conexión, ejecutar la función de reconexión, definida despues del void setup ()
-        }// fin del if (!client.connected())
-
-   client.loop(); // Esta función es muy importante, ejecuta de manera no bloqueante las funciones necesarias para la comunicación con el broker
+  Serial.print("Valor detectado por el sensor SinConv: ");   //prueba
+  Serial.println(ValorCO2);  //prueba
   
+ /* if (!client.connected()) {   // Si NO hay conexión al broker ...
+    reconnect();               // Ejecuta el intento de reconexión
+  }   
+   
+  client.loop();               // Es para mantener la comunicación con el broker
+
   timeNow = millis(); // Control de tiempo para esperas no bloqueantes
   if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
     timeLast = timeNow; // Actualización de seguimiento de tiempo
 
-//----------------------- PRESENCIA----------------------------
-
-  ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
-
-        char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
-        
-        dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
-        Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
-        Serial.println(dataString);
-        client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
-
-
-//if-else comentado por que se raliza desde el callback
-/*  
-  if (ValorPIR == HIGH) {          //Pregunta si esta en alta
-//   Serial.print(" | PRESENCIA | ");
-    digitalWrite(LedInt, 0);       //de ser asi lo enciede
-  } else {                      // si esta en bajo
-    digitalWrite(LedInt, 1);    //Pemanece apagado
-//    Serial.print(" | AUSENCIA | ");
-  }
- */ //if-else comentado
-
-
-
 //----------------------- CO2---------------------------
 
-  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica
 
-  Serial.print("Valor detectado por el sensor SinConv: ");   //prueba
-  Serial.print(ValorCO2);  //prueba
   
         delay (100);
+        char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
+        
         dtostrf(ValorCO2, 1, 2, dataString);
         Serial.print("PPM de CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
@@ -204,9 +189,36 @@ void loop() {    //VOID LOOP****************************************************
         Serial.println(dataString);
         client.publish("sic/capston16/EdoVen", dataString);
 
-  
-  
-  }// fin del if (timeNow - timeLast > wait)
+
+
+
+
+//----------------------- PRESENCIA----------------------------
+
+  ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
+
+
+        dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
+        Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.println(dataString);
+        client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
+
+
+//if-else comentado por que se raliza desde el callback
+/*  
+  if (ValorPIR == HIGH) {          //Pregunta si esta en alta
+//   Serial.print(" | PRESENCIA | ");
+    digitalWrite(LedInt, 0);       //de ser asi lo enciede
+  } else {                      // si esta en bajo
+    digitalWrite(LedInt, 1);    //Pemanece apagado
+//    Serial.print(" | AUSENCIA | ");
+  }
+ */ //if-else comentado
+
+
+
+
+//  }// fin del if (timeNow - timeLast > wait)
 
 }// Fin de void loop*****************************************************************///////////////////
 
@@ -214,7 +226,7 @@ void loop() {    //VOID LOOP****************************************************
 
 
 
-
+/*
 // Funcioes del usuario
 //------------------------- Abrir Ventana  -----------------------------
 void Open() {                           //Esta funcion abre la ventana
@@ -322,3 +334,5 @@ void reconnect() {
     }// fin del else
   }// fin del bucle while (!client.connected())
 }// fin de void reconnect(
+
+*/
