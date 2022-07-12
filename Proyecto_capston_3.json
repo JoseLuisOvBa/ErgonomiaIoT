@@ -1,0 +1,1348 @@
+[
+    {
+        "id": "0fbcae9d74fa50e0",
+        "type": "tab",
+        "label": "PROYECTO CAPSTON_2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "067cd09cefb8cd55",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "func": "msg.payload = msg.payload.id;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 140,
+        "wires": [
+            [
+                "9b1bd5e37d5dbee4"
+            ]
+        ]
+    },
+    {
+        "id": "afda0089bbcbed29",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "func": "//msg.payload = msg.payload.CO2;\nglobal.set (\"CO2\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 220,
+        "wires": [
+            [
+                "d1c7eccdcb26ac76",
+                "4003a277af1a30a7"
+            ]
+        ]
+    },
+    {
+        "id": "1945d163264d4c8b",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "func": "//msg.topic = msg.payload.id;\n//msg.payload = msg.payload.CO2;\nglobal.set = (\"CO2\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 400,
+        "wires": [
+            [
+                "cc7e4ade140d4bad"
+            ]
+        ]
+    },
+    {
+        "id": "f2ce8a971f9e4d62",
+        "type": "mqtt in",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "topic": "sic/capston16/CO2",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "f411400605113658",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "3e733b8490d6f6ea"
+            ]
+        ]
+    },
+    {
+        "id": "9b1bd5e37d5dbee4",
+        "type": "ui_text",
+        "z": "0fbcae9d74fa50e0",
+        "group": "521787be76cc249b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Salon 1",
+        "format": "",
+        "layout": "row-left",
+        "x": 580,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "d1c7eccdcb26ac76",
+        "type": "ui_gauge",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "group": "cef76915c00e7b93",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "CO2",
+        "label": ">= a 600 ppm",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 690,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cc7e4ade140d4bad",
+        "type": "ui_chart",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "group": "d45a32ff5073febf",
+        "order": 0,
+        "width": "6",
+        "height": "6",
+        "label": "Historico de CO2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1.5",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 690,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8106a32eb4cb9e10",
+        "type": "json",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 600,
+        "wires": [
+            [
+                "177feaf3b5b512d1"
+            ]
+        ]
+    },
+    {
+        "id": "b11aa3b62bc302c7",
+        "type": "mqtt in",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "topic": "sic/capston16/presencia",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "f411400605113658",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 600,
+        "wires": [
+            [
+                "8106a32eb4cb9e10"
+            ]
+        ]
+    },
+    {
+        "id": "177feaf3b5b512d1",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "A/P",
+        "func": "//msg.topic = msg.payload.id2;\n//msg.payload = msg.payload.presencia;\nglobal.set (\"presencia\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 560,
+        "wires": [
+            [
+                "33356aec198a09f1",
+                "42215d3f99371261"
+            ]
+        ]
+    },
+    {
+        "id": "6633065f6b808906",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Alarma",
+        "group": "6663a0198255879d",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1220,
+        "y": 640,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "33356aec198a09f1",
+        "type": "ui_gauge",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "group": "eb1755892dc76f69",
+        "order": 2,
+        "width": "6",
+        "height": "6",
+        "gtype": "gage",
+        "title": "Ausencia / Presencia",
+        "label": "binario",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 780,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "3e733b8490d6f6ea",
+        "type": "json",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 330,
+        "y": 220,
+        "wires": [
+            [
+                "067cd09cefb8cd55",
+                "afda0089bbcbed29",
+                "1945d163264d4c8b"
+            ]
+        ]
+    },
+    {
+        "id": "1e14642b07e73c2f",
+        "type": "inject",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Topic de fecha",
+        "payloadType": "date",
+        "x": 160,
+        "y": 40,
+        "wires": [
+            [
+                "833284e26f73b840"
+            ]
+        ]
+    },
+    {
+        "id": "b4d844244d3bb43a",
+        "type": "debug",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "833284e26f73b840",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "func": "var date = new Date(msg.payload);\n// Cambia el payload para que sea una fecha con formato\nmsg.payload = date.toString();\n//msg.taquitos = \"2 de pastor\";// Regresa el mensaje para que se envíe al sigueinte nodo\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 40,
+        "wires": [
+            [
+                "b4d844244d3bb43a",
+                "cb499ae02307ea1f"
+            ]
+        ]
+    },
+    {
+        "id": "cb499ae02307ea1f",
+        "type": "ui_text",
+        "z": "0fbcae9d74fa50e0",
+        "group": "521787be76cc249b",
+        "order": 0,
+        "width": "5",
+        "height": "2",
+        "name": "",
+        "label": "Fecha",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 710,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "7b69e62739aea3e7",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 700,
+        "wires": [
+            [
+                "d4cffa05e87865ea",
+                "ade9677818489f3c"
+            ]
+        ]
+    },
+    {
+        "id": "8010edd13a3288b0",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 760,
+        "wires": [
+            [
+                "d4cffa05e87865ea"
+            ]
+        ]
+    },
+    {
+        "id": "d4cffa05e87865ea",
+        "type": "ui_switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "label": "Intruso en el aula",
+        "tooltip": "",
+        "group": "e6d23854.a005",
+        "order": 1,
+        "width": "5",
+        "height": "2",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 1030,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ade9677818489f3c",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Intruso en el aula",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1020,
+        "y": 640,
+        "wires": [
+            [
+                "6633065f6b808906"
+            ]
+        ]
+    },
+    {
+        "id": "42215d3f99371261",
+        "type": "switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 590,
+        "y": 720,
+        "wires": [
+            [
+                "7b69e62739aea3e7"
+            ],
+            [
+                "8010edd13a3288b0"
+            ]
+        ]
+    },
+    {
+        "id": "46929dffb3eb843e",
+        "type": "mqtt in",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "topic": "sic/capston16/EdoVen",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "f411400605113658",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 1020,
+        "wires": [
+            [
+                "4c65de7d66452ba2"
+            ]
+        ]
+    },
+    {
+        "id": "98008ff111ace317",
+        "type": "switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 590,
+        "y": 1020,
+        "wires": [
+            [
+                "03ac9cc79162a652"
+            ],
+            [
+                "bd37178968a8ea80"
+            ]
+        ]
+    },
+    {
+        "id": "03ac9cc79162a652",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 980,
+        "wires": [
+            [
+                "86fb9a33eee920c7",
+                "b2c1f1dc84ec4c57"
+            ]
+        ]
+    },
+    {
+        "id": "bd37178968a8ea80",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 1060,
+        "wires": [
+            [
+                "b2c1f1dc84ec4c57",
+                "b1292ef26cc61797"
+            ]
+        ]
+    },
+    {
+        "id": "86fb9a33eee920c7",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Ventana Abierta",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 940,
+        "wires": [
+            [
+                "5e5f0482bf0592e5",
+                "2b5348f81767e1ab"
+            ]
+        ]
+    },
+    {
+        "id": "b2c1f1dc84ec4c57",
+        "type": "ui_switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "label": "Estado de Ventana",
+        "tooltip": "",
+        "group": "66cbfbdfc0fcbbb9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 1070,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5e5f0482bf0592e5",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Abierto",
+        "group": "66cbfbdfc0fcbbb9",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1320,
+        "y": 940,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "b1292ef26cc61797",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Ventana Cerrada",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 1100,
+        "wires": [
+            [
+                "bd24d9f81f924c69",
+                "2b5348f81767e1ab"
+            ]
+        ]
+    },
+    {
+        "id": "bd24d9f81f924c69",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Cerrada",
+        "group": "66cbfbdfc0fcbbb9",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1320,
+        "y": 1100,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "85595f901d31c3aa",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "C/A",
+        "func": "//msg.topic = msg.payload.id2;\n//msg.payload = msg.payload.EdoVen;\nglobal.set (\"EdoVen\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1020,
+        "wires": [
+            [
+                "98008ff111ace317"
+            ]
+        ]
+    },
+    {
+        "id": "4c65de7d66452ba2",
+        "type": "json",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 310,
+        "y": 1020,
+        "wires": [
+            [
+                "85595f901d31c3aa"
+            ]
+        ]
+    },
+    {
+        "id": "2b5348f81767e1ab",
+        "type": "ui_text",
+        "z": "0fbcae9d74fa50e0",
+        "group": "66cbfbdfc0fcbbb9",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "*** Ventana ***",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1560,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "9007eda8a522cbd6",
+        "type": "mqtt in",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "topic": "sic/capston16/EdoVenti",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "f411400605113658",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 1360,
+        "wires": [
+            [
+                "a9c4cd3cf4f6a4b8"
+            ]
+        ]
+    },
+    {
+        "id": "5b2f2c72edf04e69",
+        "type": "switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 610,
+        "y": 1360,
+        "wires": [
+            [
+                "4b9b499d5e3e78eb"
+            ],
+            [
+                "3f08833e16e1b53c"
+            ]
+        ]
+    },
+    {
+        "id": "4b9b499d5e3e78eb",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 1320,
+        "wires": [
+            [
+                "83582f46a2dd6bb7",
+                "a679ec70e7f75ada"
+            ]
+        ]
+    },
+    {
+        "id": "3f08833e16e1b53c",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 1400,
+        "wires": [
+            [
+                "a679ec70e7f75ada",
+                "893a51f178c927a4"
+            ]
+        ]
+    },
+    {
+        "id": "3d73091813c45515",
+        "type": "function",
+        "z": "0fbcae9d74fa50e0",
+        "name": "E/A",
+        "func": "//msg.topic = msg.payload.id2;\n//msg.payload = msg.payload.Venti;\nglobal.set (\"EdoVenti\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1360,
+        "wires": [
+            [
+                "5b2f2c72edf04e69"
+            ]
+        ]
+    },
+    {
+        "id": "a9c4cd3cf4f6a4b8",
+        "type": "json",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 330,
+        "y": 1360,
+        "wires": [
+            [
+                "3d73091813c45515"
+            ]
+        ]
+    },
+    {
+        "id": "83582f46a2dd6bb7",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Ventilador Encendido",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 1280,
+        "wires": [
+            [
+                "f4b736af8bdd014b",
+                "4fdbedd4b5078084"
+            ]
+        ]
+    },
+    {
+        "id": "a679ec70e7f75ada",
+        "type": "ui_switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "label": "Estado del Ventilador",
+        "tooltip": "",
+        "group": "9ebceea441bb9a13",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 1080,
+        "y": 1360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f4b736af8bdd014b",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Encendido",
+        "group": "66cbfbdfc0fcbbb9",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1330,
+        "y": 1280,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "893a51f178c927a4",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Ventilador Apagado",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1060,
+        "y": 1440,
+        "wires": [
+            [
+                "ce8d5ccfdcf4a807",
+                "4fdbedd4b5078084"
+            ]
+        ]
+    },
+    {
+        "id": "ce8d5ccfdcf4a807",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Apagado",
+        "group": "66cbfbdfc0fcbbb9",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1320,
+        "y": 1440,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "4fdbedd4b5078084",
+        "type": "ui_text",
+        "z": "0fbcae9d74fa50e0",
+        "group": "9ebceea441bb9a13",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "*** Ventilador ***",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1560,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "2e563137237d589f",
+        "type": "ui_audio",
+        "z": "0fbcae9d74fa50e0",
+        "name": "Alarma",
+        "group": "cef76915c00e7b93",
+        "voice": "urn:moz-tts:speechd:Spanish%20(Spain)?es",
+        "always": true,
+        "x": 1300,
+        "y": 220,
+        "wires": [],
+        "inputLabels": [
+            "Mensaje"
+        ]
+    },
+    {
+        "id": "e8c488c4bfed96b9",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 240,
+        "wires": [
+            [
+                "a3fdcd8e4d647014",
+                "041d668e4d99d9ee"
+            ]
+        ]
+    },
+    {
+        "id": "bc8a572f7fab2f4d",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 340,
+        "wires": [
+            [
+                "a3fdcd8e4d647014"
+            ]
+        ]
+    },
+    {
+        "id": "a3fdcd8e4d647014",
+        "type": "ui_switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "label": "Exceso de CO2",
+        "tooltip": "",
+        "group": "cef76915c00e7b93",
+        "order": 1,
+        "width": "5",
+        "height": "2",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "x": 1120,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "041d668e4d99d9ee",
+        "type": "change",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Exceso dioxido de carbono",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1100,
+        "y": 180,
+        "wires": [
+            [
+                "2e563137237d589f"
+            ]
+        ]
+    },
+    {
+        "id": "4003a277af1a30a7",
+        "type": "switch",
+        "z": "0fbcae9d74fa50e0",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 690,
+        "y": 300,
+        "wires": [
+            [
+                "e8c488c4bfed96b9"
+            ],
+            [
+                "bc8a572f7fab2f4d"
+            ]
+        ]
+    },
+    {
+        "id": "f411400605113658",
+        "type": "mqtt-broker",
+        "name": "Red celular",
+        "broker": "192.168.43.44",
+        "port": "1883",
+        "clientid": "Capston161",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "521787be76cc249b",
+        "type": "ui_group",
+        "name": "Ubicacion",
+        "tab": "26bcbed09e77e3c2",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "cef76915c00e7b93",
+        "type": "ui_group",
+        "name": "Valor de CO2",
+        "tab": "26bcbed09e77e3c2",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d45a32ff5073febf",
+        "type": "ui_group",
+        "name": "Grafica",
+        "tab": "26bcbed09e77e3c2",
+        "order": 7,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "6663a0198255879d",
+        "type": "ui_group",
+        "name": "Alarma",
+        "tab": "26bcbed09e77e3c2",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "eb1755892dc76f69",
+        "type": "ui_group",
+        "name": "Valor de presencia",
+        "tab": "26bcbed09e77e3c2",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e6d23854.a005",
+        "type": "ui_group",
+        "name": "Alarma P/A",
+        "tab": "26bcbed09e77e3c2",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "66cbfbdfc0fcbbb9",
+        "type": "ui_group",
+        "name": "Estado de la Ventana",
+        "tab": "26bcbed09e77e3c2",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "9ebceea441bb9a13",
+        "type": "ui_group",
+        "name": "Estado Ventilador",
+        "tab": "26bcbed09e77e3c2",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "26bcbed09e77e3c2",
+        "type": "ui_tab",
+        "name": "Capston16",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
