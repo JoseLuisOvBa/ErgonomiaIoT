@@ -51,6 +51,7 @@ int ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
 int ValorPIR = 0;     // variable para guardar el valor digital del sensor de presencia
 int ValorSv = 0;     // variable para guardar el valor digital del sensor ventana activa
 int EdoVen = 0;     //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
+int EdoVenti=0;
 
 // Variables**************************************************************************
 long timeNow, timeLast; // Variables de control de tiempo no bloqueante
@@ -147,7 +148,7 @@ void loop() {    //VOID LOOP****************************************************
 
         char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
         dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
-        Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.print("Presencia ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
 
@@ -166,13 +167,13 @@ void loop() {    //VOID LOOP****************************************************
 
  ValorCO2 = digitalRead(CO2); // lectura de la entrada digital
   
-  Serial.print("CO2 (0)si / (1)no:  ");   //prueba
-  Serial.println(ValorCO2);  //prueba
-  delay(500);                                   // wait 100ms for next reading
+ // Serial.print("CO2 (0)si / (1)no:  ");   //prueba
+ //Serial.println(ValorCO2);  //prueba
+  delay(100);                                   // wait 100ms for next reading
 
    
-        dtostrf(ValorCO2, 1, 2, dataString);
-        Serial.print("CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        dtostrf(!ValorCO2, 1, 2, dataString);
+        Serial.print("CO2 ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/CO2", dataString);
         
@@ -181,8 +182,16 @@ void loop() {    //VOID LOOP****************************************************
 
   if (ValorCO2 == 0)  // Limite 540ppm de CO2
   {
-    Serial.print("  ¡Se ha detectado CO2!  ");
+//    Serial.print("  ¡Se ha detectado CO2!  ");
     digitalWrite(Venti, HIGH); //Enciende Ventilador
+    EdoVenti=1;
+        
+        delay (100);
+        dtostrf(EdoVenti, 1, 2, dataString);
+        Serial.print("Estado de ventilador: ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.println(dataString);
+        client.publish("sic/capston16/EdoVenti", dataString);
+    
     if (EdoVen == 0) {
       Open(); //Abre Ventana
       EdoVen==1;
@@ -190,8 +199,15 @@ void loop() {    //VOID LOOP****************************************************
     delay(1000);
   }
   else {
-    Serial.print("");
-    digitalWrite (Venti, LOW);
+  //  Serial.print("");
+   digitalWrite (Venti, LOW);
+    EdoVenti=0;
+        delay (100);
+        dtostrf(EdoVenti, 1, 2, dataString);
+        Serial.print("Estado de ventilador: ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.println(dataString);
+        client.publish("sic/capston16/EdoVenti", dataString);
+        
     if (EdoVen == 1) {
       Close(); //Cierra Ventana
       EdoVen==0;
@@ -203,9 +219,12 @@ void loop() {    //VOID LOOP****************************************************
 
         delay (100);
         dtostrf(EdoVen, 1, 2, dataString);
-        Serial.print("Ventana(1-Abierta/0-Cerrada): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.print("Ventana(1-Abierta/0-Cerrada) ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/EdoVen", dataString);
+
+
+
 
 
   }// fin del if (timeNow - timeLast > wait)
@@ -222,27 +241,27 @@ void loop() {    //VOID LOOP****************************************************
 void Open() {                           //Esta funcion abre la ventana
   digitalWrite(Abrir, HIGH);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º ABRIENDO º");
+  Serial.print(" ABRIENDO >>");
   delay(9000);
 
   do {
     digitalWrite(Abrir, HIGH);
     digitalWrite(Cerrar, LOW);
-    Serial.println(" º ABRIENDO º");
+    Serial.println(" ABRIENDO >>");
     ValorSv = digitalRead(Sv);
   } while (ValorSv);
 
   EdoVen = 1;
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º DESACTIVADO º");
+  Serial.print("< Abierto >");
 }
 
 //--------------------------- Cerrar Ventana  -------------------------------
 void Close() {                           //Esta funcion cierra la ventana
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, HIGH);
-  Serial.print(" º CERRANDO º");
+  Serial.print("<< CERRANDO ");
        ValorSv = digitalRead(Sv);
        Serial.println(ValorSv);
   delay(5000);
@@ -250,7 +269,7 @@ void Close() {                           //Esta funcion cierra la ventana
   do {
     digitalWrite(Abrir, LOW);
     digitalWrite(Cerrar, HIGH);
-    Serial.println(" º CERRANDO º");
+    Serial.println("<< CERRANDO");
     ValorSv = digitalRead(Sv);
     if (!ValorSv) {
       Serial.print("En espera");
@@ -261,7 +280,7 @@ void Close() {                           //Esta funcion cierra la ventana
   EdoVen = 0;
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
-  Serial.print(" º DESACTIVADO º");
+  Serial.print("> Cerrado <");
 
 }
 
