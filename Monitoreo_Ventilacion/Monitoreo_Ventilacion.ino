@@ -41,7 +41,8 @@ PubSubClient client(espClient); // Este objeto maneja los datos de conexion al b
 
 
 // Constantes*************************************************************************
-float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
+//float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
+int ValorCO2 = 0;
 int ValorPIR = 0;     // variable para guardar el valor digital del sensor de presencia
 int ValorSv = 0;     // variable para guardar el valor digital del sensor ventana activa
 int EdoVen = 0;     //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
@@ -162,17 +163,17 @@ void loop() {    //VOID LOOP****************************************************
 
 //----------------------- CO2---------------------------
 
-  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica
+  ValorCO2 = analogRead(12); // lectura de la entrada analogica
 
   Serial.print("Valor detectado por el sensor SinConv: ");   //prueba
-  Serial.print(ValorCO2);  //prueba
+  Serial.print(ValorCO2, DEC);  //prueba
   
-        delay (100);
+       /*delay (100);
         dtostrf(ValorCO2, 1, 2, dataString);
         Serial.print("PPM de CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/CO2", dataString);
-        
+        */
 
   
 

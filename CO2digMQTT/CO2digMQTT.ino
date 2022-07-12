@@ -31,8 +31,8 @@
 
 const char* ssid = "HUAWEI Y8s";                  // Nombre de la red WiFi
 const char* password = "40cff5815000";          // Contraseña de la red Wifi
-const char* mqtt_server = "192.168.43.201";   // Red local (ifconfig en terminal) -> broker MQTT
-IPAddress server(192,168,43,201);              // Red local (ifconfig en terminal) -> broker MQTT
+const char* mqtt_server = "192.168.43.44";   // Red local (ifconfig en terminal) -> broker MQTT
+IPAddress server(192,168,43,44);              // Red local (ifconfig en terminal) -> broker MQTT
 /*
 const char* ssid = "OviRab";                  // Nombre de la red WiFi
 const char* password = "99121976";            // Contraseña de la red Wifi
@@ -78,14 +78,12 @@ void setup() {
   pinMode(LedInt, OUTPUT);     //Salida al LED interno del ESP32
   pinMode(Sv, INPUT);         //Entrada del sensor ventana abierta
   pinMode(PIR, INPUT);         //Entrada del sensor de presencia
-  pinMode(CO2, INPUT);         //Entrada del sensor de presencia
+  pinMode(CO2, INPUT);         //Entrada del sensor de CO2
   
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
   digitalWrite(Venti, LOW);
-  digitalWrite(LedInt, LOW);
-
-
+  digitalWrite(LedInt, HIGH);
 
     Serial.println();
     Serial.println();
@@ -129,7 +127,6 @@ void setup() {
 
 }// Fin de void setup*****************************************************************
 
-
 void loop() {    //VOID LOOP**********************************************************///////////////////
   
   if (!client.connected()) {   // Si NO hay conexión al broker ...
@@ -168,12 +165,12 @@ void loop() {    //VOID LOOP****************************************************
 //----------------------- CO2---------------------------
 
  ValorCO2 = digitalRead(CO2); // lectura de la entrada digital
-
   
   Serial.print("CO2 (0)si / (1)no:  ");   //prueba
   Serial.println(ValorCO2);  //prueba
-  
-        delay (100);
+  delay(500);                                   // wait 100ms for next reading
+
+   
         dtostrf(ValorCO2, 1, 2, dataString);
         Serial.print("CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
@@ -182,7 +179,7 @@ void loop() {    //VOID LOOP****************************************************
 
   
 
-  if (ValorCO2 == 0)  // La OMS sugiere de 400 a 600
+  if (ValorCO2 == 0)  // Limite 540ppm de CO2
   {
     Serial.print("  ¡Se ha detectado CO2!  ");
     digitalWrite(Venti, HIGH); //Enciende Ventilador
@@ -206,13 +203,9 @@ void loop() {    //VOID LOOP****************************************************
 
         delay (100);
         dtostrf(EdoVen, 1, 2, dataString);
-        Serial.print("Ventana(1-Open/0-Close): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+        Serial.print("Ventana(1-Abierta/0-Cerrada): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/EdoVen", dataString);
-
-
-
-
 
 
   }// fin del if (timeNow - timeLast > wait)
