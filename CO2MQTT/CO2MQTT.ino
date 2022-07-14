@@ -1,7 +1,7 @@
 
 /*Monitoreo de CO2, Presencia y ventilación
    Envio de datos de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
-   por: Jose Luis Oviedo Barriga, David Garcia Sarmiento, Erica 
+   por: Jose Luis Oviedo Barriga, David Garcia Sarmiento, Erica
    Fecha: 4 de julio de 2022
 
    Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
@@ -32,7 +32,13 @@
 const char* ssid = "HUAWEI Y8s";                  // Nombre de la red WiFi
 const char* password = "40cff5815000";          // Contraseña de la red Wifi
 const char* mqtt_server = "192.168.43.44";   // Red local (ifconfig en terminal) -> broker MQTT
-IPAddress server(192,168,43,44);              // Red local (ifconfig en terminal) -> broker MQTT
+IPAddress server(192, 168, 43, 44);           // Red local (ifconfig en terminal) -> broker MQTT
+/*
+  const char* ssid = "OviRab";                  // Nombre de la red WiFi
+  const char* password = "99121976";            // Contraseña de la red Wifi
+  const char* mqtt_server = "192.168.1.104";   // Red local (ifconfig en terminal) -> broker MQTT
+  IPAddress server(192,168,1,104);              // Red local (ifconfig en terminal) -> broker MQTT
+*/
 
 // Objetos***************************************************************************
 
@@ -41,8 +47,7 @@ PubSubClient client(espClient); // Este objeto maneja los datos de conexion al b
 
 
 // Constantes*************************************************************************
-//float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
-int ValorCO2 = 0;
+float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
 int ValorPIR = 0;     // variable para guardar el valor digital del sensor de presencia
 int ValorSv = 0;     // variable para guardar el valor digital del sensor ventana activa
 int EdoVen = 0;     //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
@@ -54,19 +59,20 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 
 // Definición de objetos**************************************************************
 
-#define LedInt 33
-#define PIR 13
-#define Sv 14
-#define Venti 15
+//#define LedInt 33
+//#define PIR 13
+//#define Sv 14
+//#define Venti 15
 #define CO2 12
-#define Abrir 4
-#define Cerrar 2
+//#define Abrir 4
+//#define Cerrar 2
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 
 void setup() {
   Serial.begin (115200);
-  
+  pinMode (CO2, INPUT);
+/*
   pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
   pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
   pinMode(Venti, OUTPUT);     //Salida de encendido de ventiladaro
@@ -74,140 +80,147 @@ void setup() {
   pinMode(Sv, INPUT);         //Entrada del sensor ventana abierta
   pinMode(PIR, INPUT);         //Entrada del sensor de presencia
 
+
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
   digitalWrite(Venti, LOW);
   digitalWrite(LedInt, LOW);
+*/
+  ///
+
+  Serial.println();
+  Serial.println();
+  Serial.print("Conectar a ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
 
 
+  /*  while (WiFi.status() != WL_CONNECTED) { // Este bucle espera a que se realice la conexión
+       digitalWrite (LedInt, HIGH);
+       delay(500); //dado que es de suma importancia esperar a la conexión, debe usarse espera bloqueante
+       digitalWrite (LedInt, LOW);
+       Serial.print(".");  // Indicador de progreso
+       delay (5);
+     }
 
-    Serial.println();
-    Serial.println();
-    Serial.print("Conectar a ");
-    Serial.println(ssid);
- 
-    WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
- 
-    while (WiFi.status() != WL_CONNECTED) { // Este bucle espera a que se realice la conexión
-      digitalWrite (LedInt, HIGH);
-      delay(500); //dado que es de suma importancia esperar a la conexión, debe usarse espera bloqueante
-      digitalWrite (LedInt, LOW);
-      Serial.print(".");  // Indicador de progreso
-      delay (5);
-    }
-  
-    // Cuando se haya logrado la conexión, el programa avanzará, por lo tanto, puede informarse lo siguiente
-    Serial.println();
-    Serial.println("WiFi conectado");
-    Serial.println("Direccion IP: ");
-    Serial.println(WiFi.localIP());
+     // Cuando se haya logrado la conexión, el programa avanzará, por lo tanto, puede informarse lo siguiente
+     Serial.println();
+     Serial.println("WiFi conectado");
+     Serial.println("Direccion IP: ");
+     Serial.println(WiFi.localIP());
 
-    // Si se logro la conexión, encender led
-    if (WiFi.status () > 0){
-    digitalWrite (LedInt, LOW);
-    }
-  
-    delay (1000); // Esta espera es solo una formalidad antes de iniciar la comunicación con el broker
+     // Si se logro la conexión, encender led
+     if (WiFi.status () > 0){
+     digitalWrite (LedInt, LOW);
+     }
 
-    // Conexión con el broker MQTT
-    client.setServer(server, 1883); // Conectarse a la IP del broker en el puerto indicado
-    client.setCallback(callback); // Activar función de CallBack, permite recibir mensajes MQTT y ejecutar funciones a partir de ellos
-    delay(1500);  // Esta espera es preventiva, espera a la conexión para no perder información
+     delay (1000); // Esta espera es solo una formalidad antes de iniciar la comunicación con el broker
 
-  Serial.println("El sensor de gas se esta pre-calentando");
-  delay(5000); // Espera a que el sensor se caliente durante 20 segundos
+     // Conexión con el broker MQTT
+     client.setServer(server, 1883); // Conectarse a la IP del broker en el puerto indicado
+     client.setCallback(callback); // Activar función de CallBack, permite recibir mensajes MQTT y ejecutar funciones a partir de ellos
+     delay(1500);  // Esta espera es preventiva, espera a la conexión para no perder información
+
+    Serial.println("El sensor de gas se esta pre-calentando");
+    delay(5000); // Espera a que el sensor se caliente durante 20 segundos
 
 
-  timeLast = millis (); // Inicia el control de tiempo
-
+    timeLast = millis (); // Inicia el control de tiempo
+  */
 }// Fin de void setup*****************************************************************
 
 
 void loop() {    //VOID LOOP**********************************************************///////////////////
-
-      //Verificar siempre que haya conexión al broker
-   if (!client.connected()) {
-        reconnect();  // En caso de que no haya conexión, ejecutar la función de reconexión, definida despues del void setup ()
-        }// fin del if (!client.connected())
-
-   client.loop(); // Esta función es muy importante, ejecuta de manera no bloqueante las funciones necesarias para la comunicación con el broker
-  
-  timeNow = millis(); // Control de tiempo para esperas no bloqueantes
-  if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
-    timeLast = timeNow; // Actualización de seguimiento de tiempo
-
-//----------------------- PRESENCIA----------------------------
-
-  ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
-
-        char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
-        
-        dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
-        Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
-        Serial.println(dataString);
-        client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
-
-
-//if-else comentado por que se raliza desde el callback
-/*  
-  if (ValorPIR == HIGH) {          //Pregunta si esta en alta
-//   Serial.print(" | PRESENCIA | ");
-    digitalWrite(LedInt, 0);       //de ser asi lo enciede
-  } else {                      // si esta en bajo
-    digitalWrite(LedInt, 1);    //Pemanece apagado
-//    Serial.print(" | AUSENCIA | ");
-  }
- */ //if-else comentado
-
-
-
-//----------------------- CO2---------------------------
-
-  ValorCO2 = analogRead(12); // lectura de la entrada analogica
+  //ValorCO2 = analogRead(CO2); // lectura de la entrada analogica
+  ValorCO2 = digitalRead(CO2);
 
   Serial.print("Valor detectado por el sensor SinConv: ");   //prueba
-  Serial.print(ValorCO2, DEC);  //prueba
-  
-       /*delay (100);
-        dtostrf(ValorCO2, 1, 2, dataString);
-        Serial.print("PPM de CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
-        Serial.println(dataString);
-        client.publish("sic/capston16/CO2", dataString);
-        */
+  Serial.println(ValorCO2);  //prueba
 
-  
-
-  if (ValorCO2 > 600)  // La OMS sugiere de 400 a 600
-  {
-    Serial.print("  ¡Se ha detectado CO2!  ");
-    digitalWrite(Venti, HIGH); //Enciende Ventilador
-    if (EdoVen == 0) {
-      Open(); //Abre Ventana
-      EdoVen==1;
+  /* if (!client.connected()) {   // Si NO hay conexión al broker ...
+     reconnect();               // Ejecuta el intento de reconexión
     }
-    delay(1000);
-  }
-  else {
-    Serial.print("");
-    digitalWrite (Venti, LOW);
-    if (EdoVen == 1) {
-      Close(); //Cierra Ventana
-      EdoVen==0;
+
+    client.loop();               // Es para mantener la comunicación con el broker
+
+    timeNow = millis(); // Control de tiempo para esperas no bloqueantes
+    if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
+     timeLast = timeNow; // Actualización de seguimiento de tiempo
+
+    //----------------------- CO2---------------------------
+
+
+
+         delay (100);
+         char dataString[8]; // Define una arreglo de caracteres para enviarlos por MQTT, especifica la longitud del mensaje en 8 caracteres
+
+         dtostrf(ValorCO2, 1, 2, dataString);
+         Serial.print("PPM de CO2 str: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+         Serial.println(dataString);
+         client.publish("sic/capston16/CO2", dataString);
+
+
+
+
+    if (ValorCO2 > 600)  // La OMS sugiere de 400 a 600
+    {
+     Serial.print("  ¡Se ha detectado CO2!  ");
+     digitalWrite(Venti, HIGH); //Enciende Ventilador
+     if (EdoVen == 0) {
+       Open(); //Abre Ventana
+       EdoVen==1;
+     }
+     delay(1000);
     }
-    delay(1000);
-  }
+    else {
+     Serial.print("");
+     digitalWrite (Venti, LOW);
+     if (EdoVen == 1) {
+       Close(); //Cierra Ventana
+       EdoVen==0;
+     }
+     delay(1000);
+    }
 
-  Serial.println("");
+    Serial.println("");
 
-        delay (100);
-        dtostrf(EdoVen, 1, 2, dataString);
-        Serial.print("Ventana(1-Open/0-Close): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
-        Serial.println(dataString);
-        client.publish("sic/capston16/EdoVen", dataString);
+         delay (100);
+         dtostrf(EdoVen, 1, 2, dataString);
+         Serial.print("Ventana(1-Open/0-Close): "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+         Serial.println(dataString);
+         client.publish("sic/capston16/EdoVen", dataString);
 
-  
-  
-  }// fin del if (timeNow - timeLast > wait)
+
+
+
+
+    //----------------------- PRESENCIA----------------------------
+
+    ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
+
+
+         dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
+         Serial.print("Presencia: "); // Se imprime en monitor solo para poder visualizar que el evento sucede
+         Serial.println(dataString);
+         client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
+
+
+    //if-else comentado por que se raliza desde el callback
+    /*
+    if (ValorPIR == HIGH) {          //Pregunta si esta en alta
+    //   Serial.print(" | PRESENCIA | ");
+     digitalWrite(LedInt, 0);       //de ser asi lo enciede
+    } else {                      // si esta en bajo
+     digitalWrite(LedInt, 1);    //Pemanece apagado
+    //    Serial.print(" | AUSENCIA | ");
+    }
+  */ //if-else comentado
+
+
+
+
+  //  }// fin del if (timeNow - timeLast > wait)
 
 }// Fin de void loop*****************************************************************///////////////////
 
@@ -215,10 +228,10 @@ void loop() {    //VOID LOOP****************************************************
 
 
 
-
-// Funcioes del usuario
-//------------------------- Abrir Ventana  -----------------------------
-void Open() {                           //Esta funcion abre la ventana
+/*
+  // Funcioes del usuario
+  //------------------------- Abrir Ventana  -----------------------------
+  void Open() {                           //Esta funcion abre la ventana
   digitalWrite(Abrir, HIGH);
   digitalWrite(Cerrar, LOW);
   Serial.print(" º ABRIENDO º");
@@ -235,10 +248,10 @@ void Open() {                           //Esta funcion abre la ventana
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
   Serial.print(" º DESACTIVADO º");
-}
+  }
 
-//--------------------------- Cerrar Ventana  -------------------------------
-void Close() {                           //Esta funcion cierra la ventana
+  //--------------------------- Cerrar Ventana  -------------------------------
+  void Close() {                           //Esta funcion cierra la ventana
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, HIGH);
   Serial.print(" º CERRANDO º");
@@ -262,21 +275,21 @@ void Close() {                           //Esta funcion cierra la ventana
   digitalWrite(Cerrar, LOW);
   Serial.print(" º DESACTIVADO º");
 
-}
+  }
 
 
 
 
-//--------------------------- callback --------------------------- 
-// Esta función permite tomar acciones en caso de que se reciba un mensaje correspondiente a un tema al cual se hará una suscripción
-void callback(char* topic, byte* message, unsigned int length) {
+  //--------------------------- callback ---------------------------
+  // Esta función permite tomar acciones en caso de que se reciba un mensaje correspondiente a un tema al cual se hará una suscripción
+  void callback(char* topic, byte* message, unsigned int length) {
 
     // Indicar por serial que llegó un mensaje
     Serial.print("Llegó un mensaje en el tema: ");
     Serial.print(topic);
 
     // Concatenar los mensajes recibidos para conformarlos como una varialbe String
-    String messageTemp; // Se declara la variable en la cual se generará el mensaje completo  
+    String messageTemp; // Se declara la variable en la cual se generará el mensaje completo
     for (int i = 0; i < length; i++) {  // Se imprime y concatena el mensaje
       Serial.print((char)message[i]);
        messageTemp += (char)message[i];
@@ -300,11 +313,11 @@ void callback(char* topic, byte* message, unsigned int length) {
         digitalWrite(LedInt, HIGH); //apaga led interno
         }// fin del else if(messageTemp == "false")
     }// fin del if (String(topic) == "sic/capston16/presencia")
-}// fin del void callback*************************************************************
+  }// fin del void callback*************************************************************
 
-//--------------------------- Función para reconectarse  --------------------------- 
+  //--------------------------- Función para reconectarse  ---------------------------
 
-void reconnect() {
+  void reconnect() {
   // Bucle hasta lograr conexión
   while (!client.connected()) { // Pregunta si hay conexión
     Serial.print("Tratando de contectarse...");
@@ -322,4 +335,6 @@ void reconnect() {
       Serial.println (client.connected ()); // Muestra estatus de conexión
     }// fin del else
   }// fin del bucle while (!client.connected())
-}// fin de void reconnect(
+  }// fin de void reconnect(
+
+*/
