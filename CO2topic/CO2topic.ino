@@ -150,7 +150,7 @@ void loop() {    //VOID LOOP****************************************************
         dtostrf(ValorPIR, 1, 2, dataString);  // Esta es una función nativa de leguaje AVR que convierte un arreglo de caracteres en una variable String
         Serial.print("Presencia ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
-        client.publish("sic/capston16/presencia", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
+        client.publish("sic/capstone16/unidos", dataString); // Esta es la función que envía los datos por MQTT, especifica el tema y el valor
 
 
 //if-else comentado por que se raliza desde el callback
@@ -175,7 +175,7 @@ void loop() {    //VOID LOOP****************************************************
         dtostrf(!ValorCO2, 1, 2, dataString);
         Serial.print("CO2 ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
-        client.publish("sic/capston16/CO2", dataString);
+        client.publish("sic/capstone16/unidos", dataString);
         
 
   
@@ -190,7 +190,7 @@ void loop() {    //VOID LOOP****************************************************
         dtostrf(EdoVenti, 1, 2, dataString);
         Serial.print("Estado de ventilador: ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
-        client.publish("sic/capston16/EdoVenti", dataString);
+        client.publish("sic/capstone16/unidos", dataString);
     
     if (EdoVen == 0) {
       Open(); //Abre Ventana
@@ -206,7 +206,7 @@ void loop() {    //VOID LOOP****************************************************
         dtostrf(EdoVenti, 1, 2, dataString);
         Serial.print("Estado de ventilador: ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
-        client.publish("sic/capston16/EdoVenti", dataString);
+        client.publish("sic/capstone16/unidos", dataString);
         
     if (EdoVen == 1) {
       Close(); //Cierra Ventana
@@ -221,7 +221,7 @@ void loop() {    //VOID LOOP****************************************************
         dtostrf(EdoVen, 1, 2, dataString);
         Serial.print("Ventana(1-Abierta/0-Cerrada) ---> "); // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
-        client.publish("sic/capston16/EdoVen", dataString);
+        client.publish("sic/capstone16/unidos", dataString);
 
 
 
@@ -314,12 +314,12 @@ void callback(char* topic, byte* message, unsigned int length) {
       if(messageTemp == "true"){
         Serial.println("Led encendido");
         digitalWrite(LedInt, LOW); //enciende led interno
-      }// fin del if (String(topic) == "sic/capston16/led"")
+      }// fin del if (String(topic) == "sic/capstone16/led")
       else if(messageTemp == "false"){
         Serial.println("Led apagado");
         digitalWrite(LedInt, HIGH); //apaga led interno
         }// fin del else if(messageTemp == "false")
-    }// fin del if (String(topic) == "sic/capston16/led")
+    }// fin del if (String(topic) == "sic/capstone16/led")
 }// fin del void callback*************************************************************
 
 //--------------------------- Función para reconectarse  --------------------------- 
@@ -331,7 +331,7 @@ void reconnect() {
     // Intentar reconexión
     if (client.connect("ESP32CAMClient")) { //Pregunta por el resultado del intento de conexión
       Serial.println("Conectado");
-      client.subscribe("sic/capston16/presencia"); // Esta función realiza la suscripción al tema
+      client.subscribe("sic/capstone16/led"); // Esta función realiza la suscripción al tema
     }// fin del  if (client.connect("ESP32CAMClient"))
     else {  //en caso de que la conexión no se logre
       Serial.print("Conexion fallida, Error rc=");
