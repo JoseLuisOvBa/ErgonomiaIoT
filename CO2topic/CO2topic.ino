@@ -310,7 +310,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     // En esta parte puedes agregar las funciones que requieras para actuar segun lo necesites al recibir un mensaje MQTT
     // Ejemplo, en caso de recibir el mensaje true - false, se cambiará el estado del led soldado en la placa.
     // El ESP323CAM está suscrito al tema esp/output
-    if (String(topic) == "sic/capston16/led") {  // En caso de recibirse mensaje en el tema esp32/output
+    if (String(topic) == "sic/capstone16/led") {  // En caso de recibirse mensaje en el tema esp32/output
       if(messageTemp == "true"){
         Serial.println("Led encendido");
         digitalWrite(LedInt, LOW); //enciende led interno

@@ -72,7 +72,8 @@ int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQ
 
 void setup() {
   Serial.begin (115200);
-
+  // WiFi.mode(WIFI_STA);
+  
   pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
   pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
   pinMode(Venti, OUTPUT);     //Salida de encendido de ventiladaro
@@ -90,6 +91,7 @@ void setup() {
     Serial.println();
     Serial.print("Conectar a ");
     Serial.println(ssid);
+ 
  
    WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
   
@@ -129,7 +131,7 @@ void setup() {
 }// Fin de void setup*****************************************************************
 
 void loop() {    //VOID LOOP**********************************************************///////////////////
-  
+ 
   if (!client.connected()) {   // Si NO hay conexión al broker ...
     reconnect();               // Ejecuta el intento de reconexión
   }   
@@ -314,7 +316,7 @@ void callback(char* topic, byte* message, unsigned int length) {
       if(messageTemp == "true"){
         Serial.println("Led encendido");
         digitalWrite(LedInt, LOW); //enciende led interno
-      }// fin del if (String(topic) == "sic/capston16/led"")
+      }// fin del if (String(topic) == "sic/capston16/led")
       else if(messageTemp == "false"){
         Serial.println("Led apagado");
         digitalWrite(LedInt, HIGH); //apaga led interno
@@ -329,9 +331,10 @@ void reconnect() {
   while (!client.connected()) { // Pregunta si hay conexión
     Serial.print("Tratando de contectarse...");
     // Intentar reconexión
+   //  WiFi.mode(WIFI_STA);
     if (client.connect("ESP32CAMClient")) { //Pregunta por el resultado del intento de conexión
       Serial.println("Conectado");
-      client.subscribe("sic/capston16/presencia"); // Esta función realiza la suscripción al tema
+      client.subscribe("sic/capston16/led"); // Esta función realiza la suscripción al tema
     }// fin del  if (client.connect("ESP32CAMClient"))
     else {  //en caso de que la conexión no se logre
       Serial.print("Conexion fallida, Error rc=");
