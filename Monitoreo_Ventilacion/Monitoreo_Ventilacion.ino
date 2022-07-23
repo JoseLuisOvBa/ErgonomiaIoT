@@ -51,8 +51,8 @@ IPAddress server(192,168,43,44);              // Red local (ifconfig en terminal
 
 // Objetos***************************************************************************
 
-WiFiClient espClient; // Este objeto maneja los datos de conexion WiFi
-PubSubClient client(espClient); // Este objeto maneja los datos de conexion al broker
+WiFiClient espClient;            // Este objeto maneja los datos de conexion WiFi
+PubSubClient client(espClient);  // Este objeto maneja los datos de conexion al broker
 
 
 // Constantes*************************************************************************
@@ -65,9 +65,9 @@ int EdoVenti=0;      // Estado del ventilador. EdoVenti=0 Apagador // EdoVenti=1
 
 // Variables**************************************************************************
 
-long timeNow, timeLast; // Variables de control de tiempo no bloqueante
-int data = 0; // Contador
-int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQTT
+long timeNow, timeLast;    // Variables de control de tiempo no bloqueante
+int data = 0;              // Contador
+int wait = 5000;           // Indica la espera cada 5 segundos para envío de mensajes MQTT
 
 // Definición de objetos**************************************************************
 
@@ -85,13 +85,13 @@ void setup() {
   Serial.begin (115200);
   // WiFi.mode(WIFI_STA);
   
-  pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
-  pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
-  pinMode(Venti, OUTPUT);     //Salida de encendido de ventiladaro
-  pinMode(LedInt, OUTPUT);     //Salida al LED interno del ESP32
-  pinMode(Sv, INPUT);         //Entrada de la EXOR (en 0 si Ventana completamente Abiera/Cerrada)
-  pinMode(PIR, INPUT);         //Entrada del sensor de presencia
-  pinMode(CO2, INPUT);         //Entrada del sensor de CO2
+  pinMode(Abrir, OUTPUT);      // Salida del ESP32 de apertura de ventana y entrada 1 de puente H
+  pinMode(Cerrar, OUTPUT);     // Salida del ESP32 de cierre de ventana y entrada 2 de puente H
+  pinMode(Venti, OUTPUT);      // Salida de encendido de ventiladaro
+  pinMode(LedInt, OUTPUT);     // Salida al LED interno del ESP32
+  pinMode(Sv, INPUT);          // Entrada de la EXOR (en 0 si Ventana completamente Abiera/Cerrada)
+  pinMode(PIR, INPUT);         // Entrada del sensor de presencia
+  pinMode(CO2, INPUT);         // Entrada del sensor de CO2
   
   digitalWrite(Abrir, LOW);
   digitalWrite(Cerrar, LOW);
@@ -107,11 +107,11 @@ void setup() {
    WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
   
 
-   while (WiFi.status() != WL_CONNECTED) { // Este bucle espera a que se realice la conexión
+   while (WiFi.status() != WL_CONNECTED) {          // Este bucle espera a que se realice la conexión
       digitalWrite (LedInt, HIGH);
-      delay(500); //dado que es de suma importancia esperar a la conexión, debe usarse espera bloqueante
+      delay(500);                                   //dado que es de suma importancia esperar a la conexión, debe usarse espera bloqueante
       digitalWrite (LedInt, LOW);
-      Serial.print(".");  // Indicador de progreso
+      Serial.print(".");                            // Indicador de progreso
       delay (5);
     }
    
@@ -129,15 +129,15 @@ void setup() {
     delay (1000); // Esta espera es solo una formalidad antes de iniciar la comunicación con el broker
 
     // Conexión con el broker MQTT
-    client.setServer(server, 1883); // Conectarse a la IP del broker en el puerto indicado
-    client.setCallback(callback); // Activar función de CallBack, permite recibir mensajes MQTT y ejecutar funciones a partir de ellos
-    delay(1500);  // Esta espera es preventiva, espera a la conexión para no perder información
+    client.setServer(server, 1883);                  // Conectarse a la IP del broker en el puerto indicado
+    client.setCallback(callback);                    // Activar función de CallBack, permite recibir mensajes MQTT y ejecutar funciones a partir de ellos
+    delay(1500);                                     // Esta espera es preventiva, espera a la conexión para no perder información
 
   Serial.println("El sensor de gas se esta pre-calentando");
-  delay(5000); // Espera a que el sensor se caliente durante 20 segundos
+  delay(5000);                                      // Espera a que el sensor se caliente
 
 
-  timeLast = millis (); // Inicia el control de tiempo
+  timeLast = millis ();                              // Inicia el control de tiempo
 
 }// Fin de void setup*****************************************************************
 
@@ -172,7 +172,7 @@ void loop() { //VOID LOOP*******************************************************
  
  delay(100);                                             // Sepera 100ms 
    
-        dtostrf(!ValorCO2, 1, 2, dataString);            //Se convierte el dato de int str y se niega el valor de ValorCO2 para !ValorCO2=1 si hay gas // !ValorCO2=0 si NO hay gas
+        dtostrf(!ValorCO2, 1, 2, dataString);            // Se convierte el dato de int str y se niega el valor de ValorCO2 para !ValorCO2=1 si hay gas // !ValorCO2=0 si NO hay gas
         Serial.print("CO2 ---> ");                       // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/CO2", dataString); // Envía los datos por MQTT, especifica el tema y el valor
@@ -197,19 +197,18 @@ void loop() { //VOID LOOP*******************************************************
     }
     delay(1000);
   }
-  else {
-  //  Serial.print("");
-   digitalWrite (Venti, LOW);
-    EdoVenti=0;
+  else {                                                     // Si el livel de gas es el adecuado
+   digitalWrite (Venti, LOW);                                // Se apaga el ventilador
+    EdoVenti=0;                                              // Estado de ventilador apagado = 0
         delay (100);
         dtostrf(EdoVenti, 1, 2, dataString);                 //Se convierte el dato de int str
         Serial.print("Estado de ventilador: ---> ");         // Se imprime en monitor solo para poder visualizar que el evento sucede
         Serial.println(dataString);
         client.publish("sic/capston16/EdoVenti", dataString);// Envía los datos por MQTT, especifica el tema y el valor del estado del Ventilador
         
-    if (EdoVen == 1) {
-      Close(); //Cierra Ventana
-      EdoVen==0;
+    if (EdoVen == 1) {                                       // Si la ventana esta abierta
+      Close();                                               // Cierra Ventana               
+      EdoVen==0;                                             // Estado de ventana cerrada = 0
     }
     delay(1000);
   }
