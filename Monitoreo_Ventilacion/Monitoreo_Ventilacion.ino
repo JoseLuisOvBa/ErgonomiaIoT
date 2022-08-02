@@ -82,8 +82,7 @@ int wait = 5000;           // Indica la espera cada 5 segundos para envío de me
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 
 void setup() {
-  Serial.begin (115200);
-  // WiFi.mode(WIFI_STA);
+  Serial.begin (115200);       // Se inicializa el puerto serial para el ESP32
   
   pinMode(Abrir, OUTPUT);      // Salida del ESP32 de apertura de ventana y entrada 1 de puente H
   pinMode(Cerrar, OUTPUT);     // Salida del ESP32 de cierre de ventana y entrada 2 de puente H
@@ -93,18 +92,18 @@ void setup() {
   pinMode(PIR, INPUT);         // Entrada del sensor de presencia
   pinMode(CO2, INPUT);         // Entrada del sensor de CO2
   
-  digitalWrite(Abrir, LOW);
-  digitalWrite(Cerrar, LOW);
-  digitalWrite(Venti, LOW);
-  digitalWrite(LedInt, HIGH);
+  digitalWrite(Abrir, LOW);     // Se inicializa apagada a apertura de la ventana
+  digitalWrite(Cerrar, LOW);    // Se inicializa apagado el cirre de la ventana
+  digitalWrite(Venti, LOW);     // Se inicializa apagado el ventilador 
+  digitalWrite(LedInt, HIGH);   // Se inicializa el LED interno apagado (lógica inversa)
 
-    Serial.println();
+    Serial.println(); 
     Serial.println();
     Serial.print("Conectar a ");
-    Serial.println(ssid);
+    Serial.println(ssid);          // Se indica la red WiFi a la que se conectará 
  
  
-   WiFi.begin(ssid, password); // Esta es la función que realiz la conexión a WiFi
+   WiFi.begin(ssid, password);     // Esta es la función que realiza la conexión a WiFi
   
 
    while (WiFi.status() != WL_CONNECTED) {          // Este bucle espera a que se realice la conexión
@@ -247,7 +246,7 @@ void Open() {                           // Esta funcion abre la ventana
     digitalWrite(Cerrar, LOW);
     Serial.println(" ABRIENDO >>");
     ValorSv = digitalRead(Sv);         // Lectura de la EXOR
-  } while (ValorSv);                   // Cuando los dos sensores de la ventana estan libres la exor indica que la ventana esta completamente abierta
+  } while (ValorSv);                   // Cuando los dos sensores de la ventana estan libres la EXOR indica que la ventana esta completamente abierta
 
   EdoVen = 1;                          // Estado de ventana indica abierta = 1
   digitalWrite(Abrir, LOW);            // Se apaga la apertura de la ventana
@@ -256,17 +255,17 @@ void Open() {                           // Esta funcion abre la ventana
 }
 
 //--------------------------- Cerrar Ventana  -------------------------------
-void Close() {                           //Esta funcion cierra la ventana
+void Close() {                           // Esta funcion cierra la ventana
   digitalWrite(Abrir, LOW);              // Garantiza que no se va a abrir
   digitalWrite(Cerrar, HIGH);            // Se cierra la ventana
   Serial.print("<< CERRANDO ");
-       ValorSv = digitalRead(Sv);
+       ValorSv = digitalRead(Sv);        // Lectura de la compueta EXOR
        Serial.println(ValorSv);
   delay(5000);                           // Se espera a que el sensor de completamente abierta se obstruya 
 
   do {                                   // Este ciclo sucede hata que se termine de cerrar la ventana
-    digitalWrite(Abrir, LOW);        
-    digitalWrite(Cerrar, HIGH);
+    digitalWrite(Abrir, LOW);            // Se garantiza que no se abra la Ventana
+    digitalWrite(Cerrar, HIGH);          // Se cierra la Ventana
     Serial.println("<< CERRANDO");
     ValorSv = digitalRead(Sv);           // Lectura de la compuerta EXOR
     if (!ValorSv) {                      // Una ves que el sensor de completamente cerrado se activa continua cerrando
