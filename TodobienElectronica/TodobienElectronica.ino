@@ -1,10 +1,10 @@
 
 /*Monitoreo de CO2, Presencia y ventilación
-   Envio de datos de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
+   Este programa tiene por objetivo comprobar el funcionamiento de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) 
    por: Jose Luis Oviedo Barriga, David Garcia Sarmiento
    Fecha: 29 de junio de 2022
 
-   Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) por MQTT
+   Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) 
 
               CO2                        PRESENCIA
    ESP32      MQ135PinAtras      ESP32      Pir Hcsr501   ESP32      Ventilador
@@ -15,7 +15,7 @@
    Asignacion de pines DISPONIBLES ESP32CAM
    IO4    Abrir     En 1 Abrir ventana
    IO2    Cerrar    En 1 Cerrar ventana
-   IO14   Sv        Sensor de ventana compeltamente Abierta
+   IO14   Sv        Sensor de ventana compeltamente Abierta/Cerrada (compuerta EXOR)
    IO15   Venti     Rele Ventilador
    IO12   CO2       Sensor CO2
    IO13   PIR       Sensor Presencia
@@ -23,49 +23,44 @@
 
 */
 
-// Bibliotecas************************************************************************
-#include <WiFi.h>  // Biblioteca para el control de WiFi
-#include <PubSubClient.h> //Biblioteca para conexion MQTT
-
-
 // Constantes*************************************************************************
 float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
 int ValorPIR = 0;     // variable para guardar el valor digital del sensor de presencia
-int ValorSv = 0;     // variable para guardar el valor digital del sensor ventana activa
-int EdoVen = 0;     //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
+int ValorSv = 0;      // variable para guardar el valor digital del sensor ventana activa
+int EdoVen = 0;       //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
 
 // Variables**************************************************************************
-long timeNow, timeLast; // Variables de control de tiempo no bloqueante
-int data = 0; // Contador
-int wait = 5000;  // Indica la espera cada 5 segundos para envío de mensajes MQTT
+long timeNow, timeLast;    // Variables de control de tiempo no bloqueante
+int data = 0;              // Contador
+int wait = 5000;           // Indica la espera cada 5 segundos para envío de mensajes MQTT
 
 // Definición de objetos**************************************************************
 
-#define LedInt 33
-#define PIR 13
-#define Sv 14
-#define Venti 15
-#define CO2 12
-#define Abrir 4
-#define Cerrar 2
+#define LedInt 33   // Pin del LED interno
+#define PIR 13      // Pin del sensor de presencia
+#define Sv 14       // Pin de la EXOR
+#define Venti 15    // Pin de Relevador que activará el ventilador 
+#define CO2 12      // Pin del sensor de CO2
+#define Abrir 4     // Pin de salida al puente H que controla el motor para abrir la ventana
+#define Cerrar 2    // Pin de salida al puenta H que controla el motor para cerrar la ventana
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 void setup() {
 
   pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
   pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
-  pinMode(Venti, OUTPUT);     //Salida de encendido de ventiladaro
+  pinMode(Venti, OUTPUT);      //Salida de encendido de ventiladaro
   pinMode(LedInt, OUTPUT);     //Salida al LED interno del ESP32
-  pinMode(Sv, INPUT);         //Entrada del sensor ventana abierta
+  pinMode(Sv, INPUT);          //Entrada de la EXOR que indica que la ventana esta completamente Abierta/Cerrada
   pinMode(PIR, INPUT);         //Entrada del sensor de presencia
 
-  digitalWrite(Abrir, LOW);
-  digitalWrite(Cerrar, LOW);
-  digitalWrite(Venti, LOW);
+  digitalWrite(Abrir, LOW);     // Se inicializa apagada a apertura de la ventana 
+  digitalWrite(Cerrar, LOW);    // Se inicializa apagado el cirre de la ventana
+  digitalWrite(Venti, LOW);     // Se inicializa apagado el ventilador 
 
   Serial.begin (115200);
   Serial.println("El sensor de gas se esta pre-calentando");
-  delay(5000); // Espera a que el sensor se caliente durante 20 segundos
+  delay(5000); // Espera a que el sensor se caliente durante 5 segundos
 
   timeLast = millis (); // Inicia el control de tiempo
 
@@ -74,12 +69,12 @@ void setup() {
 
 void loop() {    //VOID LOOP**********************************************************///////////////////
 
-  timeNow = millis(); // Control de tiempo para esperas no bloqueantes
-  if (timeNow - timeLast > wait) { // Manda un mensaje por MQTT cada cinco segundos
-    timeLast = timeNow; // Actualización de seguimiento de tiempo
+  timeNow = millis();                       // Control de tiempo para esperas no bloqueantes
+  if (timeNow - timeLast > wait) {          // Manda un mensaje por MQTT cada cinco segundos
+    timeLast = timeNow;                     // Actualización de seguimiento de tiempo
 
-    presencia();                          //funcion de presencia
-    COdos();                              //Funcion deteccion de CO2
+    presencia();                            // Funcion de presencia
+    COdos();                                // Funcion deteccion de CO2
   }// fin del if (timeNow - timeLast > wait)
 
 }// Fin de void loop*****************************************************************///////////////////
@@ -89,13 +84,13 @@ void loop() {    //VOID LOOP****************************************************
 
 // Funcioes del usuario
 //----------------------- PRESENCIA----------------------------
-void presencia() {               //Esta funcion realiza el sensado de presencia
-  ValorPIR = digitalRead(PIR);   //Lectura del Sensor PIR que se guarda en ValorPIR
-  if (ValorPIR == HIGH) {          //Pregunta si esta en alta
+void presencia() {                    // Esta funcion realiza el sensado de presencia
+  ValorPIR = digitalRead(PIR);        // Lectura del Sensor PIR que se guarda en ValorPIR
+  if (ValorPIR == HIGH) {             // Pregunta si esta en alta
     Serial.print(" | PRESENCIA | ");
-    digitalWrite(LedInt, 0);       //de ser asi lo enciede
-  } else {                      // si esta en bajo
-    digitalWrite(LedInt, 1);    //Pemanece apagado
+    digitalWrite(LedInt, 0);          // de ser asi lo enciede
+  } else {                            // si esta en bajo
+    digitalWrite(LedInt, 1);          // Pemanece apagado (Lógica inversa) 
     Serial.print(" | AUSENCIA | ");
   }
 } 
@@ -103,12 +98,13 @@ void presencia() {               //Esta funcion realiza el sensado de presencia
 
 //----------------------- CO2---------------------------
 
-void COdos() {               //Esta funcion realiza el sensado de presencia
-  ValorCO2 = analogRead(CO2); // lectura de la entrada analogica "A0""
-  Serial.print("Valor detectado por el sensor: ");
+void COdos() {                       // Esta funcion realiza el sensado de presencia
+  ValorCO2 = digitalRead(CO2);       // Lectura de la entrada digital (1=no hay / 0=Si hay)
+  ValorCO2=!ValorCO2;                // Se niega ya que el sensor entrega la respuesta negada (0=No hay / 1=Si hay)
+  Serial.print(" Detección de CO2 (1 hay / 0 no hay): ");
   Serial.print(ValorCO2);
 
-  if (ValorCO2 > 600)  // La OMS sugiere de 400 a 600
+  if (ValorCO2 == 1)            
   {
     Serial.print("  ¡Se ha detectado CO2!  ");
     digitalWrite(Venti, HIGH); //Enciende Ventilador
