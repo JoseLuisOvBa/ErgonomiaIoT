@@ -47,12 +47,12 @@ int wait = 5000;           // Indica la espera cada 5 segundos para envío de me
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar***********************
 void setup() {
 
-  pinMode(Abrir, OUTPUT);      //Salida del ESP32 de apertura de ventana y entrada 1 de puente H
-  pinMode(Cerrar, OUTPUT);     //Salida del ESP32 de cierre de ventana y entrada 2 de puente H
-  pinMode(Venti, OUTPUT);      //Salida de encendido de ventiladaro
-  pinMode(LedInt, OUTPUT);     //Salida al LED interno del ESP32
-  pinMode(Sv, INPUT);          //Entrada de la EXOR que indica que la ventana esta completamente Abierta/Cerrada
-  pinMode(PIR, INPUT);         //Entrada del sensor de presencia
+  pinMode(Abrir, OUTPUT);      // Salida del ESP32 de apertura de ventana y entrada 1 de puente H
+  pinMode(Cerrar, OUTPUT);     // Salida del ESP32 de cierre de ventana y entrada 2 de puente H
+  pinMode(Venti, OUTPUT);      // Salida de encendido de ventiladaro
+  pinMode(LedInt, OUTPUT);     // Salida al LED interno del ESP32
+  pinMode(Sv, INPUT);          // Entrada de la EXOR que indica que la ventana esta completamente Abierta/Cerrada
+  pinMode(PIR, INPUT);         // Entrada del sensor de presencia
 
   digitalWrite(Abrir, LOW);     // Se inicializa apagada a apertura de la ventana 
   digitalWrite(Cerrar, LOW);    // Se inicializa apagado el cirre de la ventana
@@ -62,7 +62,7 @@ void setup() {
   Serial.println("El sensor de gas se esta pre-calentando");
   delay(5000); // Espera a que el sensor se caliente durante 5 segundos
 
-  timeLast = millis (); // Inicia el control de tiempo
+  timeLast = millis ();         // Inicia el control de tiempo
 
 }// Fin de void setup*****************************************************************
 
@@ -91,7 +91,7 @@ void presencia() {                    // Esta funcion realiza el sensado de pres
     digitalWrite(LedInt, 0);          // de ser asi lo enciede
   } else {                            // si esta en bajo
     digitalWrite(LedInt, 1);          // Pemanece apagado (Lógica inversa) 
-    Serial.print(" | AUSENCIA | ");
+    Serial.print(" | AUSENCIA | ");   
   }
 } 
 
@@ -104,20 +104,20 @@ void COdos() {                       // Esta funcion realiza el sensado de prese
   Serial.print(" Detección de CO2 (1 hay / 0 no hay): ");
   Serial.print(ValorCO2);
 
-  if (ValorCO2 == 1)            
+  if (ValorCO2 == 1)                                    // Si ValorCO==1 entonces hay de CO2  
   {
     Serial.print("  ¡Se ha detectado CO2!  ");
-    digitalWrite(Venti, HIGH); //Enciende Ventilador
-    if (EdoVen == 0) {
-      Open(); //Abre Ventana
+    digitalWrite(Venti, HIGH);                         // Enciende Ventilador
+    if (EdoVen == 0) {                                 // Si la ventana está cerrada
+      Open();                                          // Abre la Ventana
     }
     delay(1000);
   }
-  else {
+  else {                                               // Si ValorCO==0 entonces NO hay de CO2                                          
     Serial.print("");
-    digitalWrite (Venti, LOW);
-    if (EdoVen == 1) {
-      Close(); //Cierra Ventana
+    digitalWrite (Venti, LOW);                         //  Se apaga el Ventilardor 
+    if (EdoVen == 1) {                                 // Si la ventana esta abierta
+      Close();                                         // Cierra Ventana
     }
     delay(1000);
   }
@@ -127,48 +127,48 @@ void COdos() {                       // Esta funcion realiza el sensado de prese
 
 
 //------------------------- Abrir Ventana  -----------------------------
-void Open() {                           //Esta funcion abre la ventana
-  digitalWrite(Abrir, HIGH);
-  digitalWrite(Cerrar, LOW);
+void Open() {                           // Esta funcion abre la ventana
+  digitalWrite(Abrir, HIGH);            // Se abre la ventana
+  digitalWrite(Cerrar, LOW);            // Garantiza que no se va a cerrar 
   Serial.print(" º ABRIENDO º");
-  delay(9000);
+  delay(9000);                          // Se espera a que el sensor de completamente cerrado se libere
 
-  do {
+  do {                                  // Este ciclo sucede hata que se termine de abrir la ventana
     digitalWrite(Abrir, HIGH);
     digitalWrite(Cerrar, LOW);
     Serial.println(" º ABRIENDO º");
-    ValorSv = digitalRead(Sv);
-  } while (ValorSv);
+    ValorSv = digitalRead(Sv);         // Lectura de la EXOR
+  } while (ValorSv);                   // Cuando los dos sensores de la ventana estan libres la EXOR indica que la ventana esta completamente abierta
 
-  EdoVen = 1;
-  digitalWrite(Abrir, LOW);
-  digitalWrite(Cerrar, LOW);
+  EdoVen = 1;                          // Estado de ventana indica abierta = 1
+  digitalWrite(Abrir, LOW);            // Se apaga la apertura de la ventana
+  digitalWrite(Cerrar, LOW);           // Se garantiza que no se cierre 
   Serial.print(" º DESACTIVADO º");
 }
 
 //--------------------------- Cerrar Ventana  -------------------------------
-void Close() {                           //Esta funcion cierra la ventana
-  digitalWrite(Abrir, LOW);
-  digitalWrite(Cerrar, HIGH);
+void Close() {                           // Esta funcion cierra la ventana
+  digitalWrite(Abrir, LOW);              // Garantiza que no se va a abrir
+  digitalWrite(Cerrar, HIGH);            // Se cierra la ventana
   Serial.print(" º CERRANDO º");
-       ValorSv = digitalRead(Sv);
+       ValorSv = digitalRead(Sv);        // Lectura de la compueta EXOR
        Serial.println(ValorSv);
-  delay(5000);
+  delay(5000);                           // Se espera a que el sensor de completamente abierta se obstruya 
 
-  do {
-    digitalWrite(Abrir, LOW);
-    digitalWrite(Cerrar, HIGH);
+  do {                                   // Este ciclo sucede hata que se termine de cerrar la ventana
+    digitalWrite(Abrir, LOW);            // Se garantiza que no se abra la Ventana
+    digitalWrite(Cerrar, HIGH);          // Se cierra la Ventana
     Serial.println(" º CERRANDO º");
-    ValorSv = digitalRead(Sv);
-    if (!ValorSv) {
+    ValorSv = digitalRead(Sv);           // Lectura de la compuerta EXOR
+    if (!ValorSv) {                      // Una ves que el sensor de completamente cerrado se activa continua cerrando
       Serial.print("En espera");
-      delay(6500); //Tiempo para que termine de cerrar la ventana (el sensor esta antes del cierre total)
+      delay(6500);                       //Tiempo para que termine de cerrar la ventana (el sensor esta antes del cierre total)
     }
-  } while (ValorSv);
+  } while (ValorSv);                     // Termina el ciclo de cierre de ventana 
 
-  EdoVen = 0;
-  digitalWrite(Abrir, LOW);
-  digitalWrite(Cerrar, LOW);
+  EdoVen = 0;                            // Estado de ventana cerrado = 0
+  digitalWrite(Abrir, LOW);              // Permanece apagodo la apertura de la ventana
+  digitalWrite(Cerrar, LOW);             // Se apaga el cierre de la ventana
   Serial.print(" º DESACTIVADO º");
 
 }
