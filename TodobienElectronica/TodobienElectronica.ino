@@ -1,7 +1,7 @@
 
 /*Monitoreo de CO2, Presencia y ventilación
    Este programa tiene por objetivo comprobar el funcionamiento de los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) 
-   por: Jose Luis Oviedo Barriga, David Garcia Sarmiento
+   por: Jose Luis Oviedo Barriga, David Garcia Sarmiento, Erika Barojas Payán
    Fecha: 29 de junio de 2022
 
    Este programa lee los sensores MQ135 (CO2) y Pir Hcsr501 (presencia) 
@@ -24,10 +24,10 @@
 */
 
 // Constantes*************************************************************************
-float ValorCO2 = 0;   // variable para guardar el valor analógico del sensor
-int ValorPIR = 0;     // variable para guardar el valor digital del sensor de presencia
-int ValorSv = 0;      // variable para guardar el valor digital del sensor ventana activa
-int EdoVen = 0;       //Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
+float ValorCO2 = 0;   // Variable para guardar el valor digital del sensor de CO2
+int ValorPIR = 0;     // Variable para guardar el valor digital del sensor de presencia
+int ValorSv = 0;      // Variable para guardar el valor digital del sensor ventana activa
+int EdoVen = 0;       // Condicion inicial Ventana cerrada  EdoVen=1 Abierta // EdoVen=0 Cerrada
 
 // Variables**************************************************************************
 long timeNow, timeLast;    // Variables de control de tiempo no bloqueante
